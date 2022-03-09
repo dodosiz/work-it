@@ -16,5 +16,5 @@ interface UserProps {
 }
 
 function User(props: UserProps) {
-	return <li>{props.user.name}, role: {props.user.role}</li>;
+	return <li>{props.user.firstName} {props.user.lastName} <i>role: {props.user.role}</i></li>;
 }

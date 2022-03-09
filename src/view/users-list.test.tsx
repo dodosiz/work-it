@@ -14,8 +14,8 @@ describe("Users list component:", () => {
 			preloadedState: {
 				usersState: {
 					users: [
-						{id: "1", name: "George", role: "developer"},
-						{id: "2", name: "Nick", role: "graphic designer"}
+						{id: "1", firstName: "George", lastName: "Daniels", role: "developer"},
+						{id: "2", firstName: "Nick", lastName: "Gates", role: "graphic designer"}
 					]
 				}
 			}

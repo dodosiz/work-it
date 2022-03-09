@@ -21,12 +21,13 @@ describe("Create user form component:", () => {
 		render(<Provider store={store}>
 			<CreateUserForm />
 		</Provider>);
-		userEvent.type(screen.getByLabelText("Name:"), "Thomas");
+		userEvent.type(screen.getByLabelText("First name:"), "Thomas");
+		userEvent.type(screen.getByLabelText("Last name:"), "Edison");
 		userEvent.type(screen.getByLabelText("Role:"), "developer");
 		userEvent.click(screen.getByRole("button", {name: "Submit"}));
 		expect(store.getState()).toEqual({
 			usersState: {
-				users: [{id: "userId", name: "Thomas", role: "developer"}]
+				users: [{id: "userId", firstName: "Thomas", lastName: "Edison", role: "developer"}]
 			}
 		});
 	});

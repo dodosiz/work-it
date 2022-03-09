@@ -16,9 +16,9 @@ describe("Users reducer:", () => {
 		};
 		const nextState = usersReducer(
 			initialState,
-			addUser({name: "Tom", role: "project manager"}));
+			addUser({firstName: "Tom", lastName: "Johnson", role: "project manager"}));
 		expect(nextState).toEqual({
-			users: [{id: "userId", name: "Tom", role: "project manager"}]
+			users: [{id: "userId", firstName: "Tom", lastName: "Johnson", role: "project manager"}]
 		});
 	});
 });

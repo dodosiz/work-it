@@ -5,13 +5,23 @@ exports[`Users list component: displays a list of users 1`] = `
   <ul>
     <li>
       George
-      , role: 
-      developer
+       
+      Daniels
+       
+      <i>
+        role: 
+        developer
+      </i>
     </li>
     <li>
       Nick
-      , role: 
-      graphic designer
+       
+      Gates
+       
+      <i>
+        role: 
+        graphic designer
+      </i>
     </li>
   </ul>
 </div>

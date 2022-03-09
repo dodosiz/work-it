@@ -8,12 +8,14 @@ export interface UsersState {
 
 export interface User {
 	id: string;
-	name: string;
+	firstName: string;
+	lastName: string;
 	role: string;
 }
 
 interface AddUserPayload {
-	name: string;
+	firstName: string;
+	lastName: string;
 	role: string;
 }
 
