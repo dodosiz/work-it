@@ -5,8 +5,8 @@ import { User, usersSelector } from "../data/users";
 export function UsersList() {
 	const users = useSelector(usersSelector);
 	return <ul>
-		{users.map((user, index) => (
-			<User key={`$${user.name}-${index}`} user={user}/>
+		{users.map(user => (
+			<User key={user.id} user={user}/>
 		))}
 	</ul>;
 }

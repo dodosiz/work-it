@@ -1,11 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppState } from "./store";
+import { v4 } from "uuid";
 
 export interface UsersState {
 	users: User[];
 }
 
 export interface User {
+	id: string;
+	name: string;
+	role: string;
+}
+
+interface AddUserPayload {
 	name: string;
 	role: string;
 }
@@ -18,8 +25,11 @@ const usersSlice = createSlice({
 	name: "users",
 	initialState,
 	reducers: {
-		addUser: (state, action: PayloadAction<User>) => {
-			state.users.push(action.payload);
+		addUser: (state, action: PayloadAction<AddUserPayload>) => {
+			state.users.push({
+				id: v4(),
+				...action.payload
+			});
 		}
 	}
 });

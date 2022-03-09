@@ -5,6 +5,11 @@ import { Provider } from "react-redux";
 import { CreateUserForm } from "./create-user-form";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import "uuid";
+
+jest.mock("uuid", () => ({
+	v4: jest.fn().mockReturnValue("userId")
+}));
 
 describe("Create user form component:", () => {
 	test("create a new user", () => {
@@ -21,7 +26,7 @@ describe("Create user form component:", () => {
 		userEvent.click(screen.getByRole("button", {name: "Submit"}));
 		expect(store.getState()).toEqual({
 			usersState: {
-				users: [{name: "Thomas", role: "developer"}]
+				users: [{id: "userId", name: "Thomas", role: "developer"}]
 			}
 		});
 	});
