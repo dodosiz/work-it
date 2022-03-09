@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import * as React from "react";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
 import { usersReducer } from "../data/users";
 import { Users } from "./users";
+import {render} from "@testing-library/react";
 
 describe("Users component:", () => {
 	test("displays a list of users", () => {
@@ -20,11 +20,10 @@ describe("Users component:", () => {
 				}
 			}
 		});
-		const component = renderer.create(
-			<Provider store={store}>
-				<Users />
-			</Provider>
+		const component = render(<Provider store={store}>
+			<Users />
+		</Provider>,
 		);
-		expect(component).toMatchSnapshot();
+		expect(component.container).toMatchSnapshot();
 	});
 });
