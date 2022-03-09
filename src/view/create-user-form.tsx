@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Button, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { addUser } from "../data/users";
 
@@ -23,13 +24,22 @@ export function CreateUserForm() {
 		setLastName("");
 		setRole("");
 	};
-	return <form onSubmit={handleSubmit}>
-		<label htmlFor="firstName">First name:</label>
-		<input id="firstName" type="text" value={firstName} onChange={handleFirstNameChange} />
-		<label htmlFor="lastName">Last name:</label>
-		<input id="lastName" type="text" value={lastName} onChange={handleLastNameChange} />
-		<label htmlFor="role">Role:</label>
-		<input id="role" aria-label="role" type="text" value={role} onChange={handleRoleChange} />
-		<button type="submit">Submit</button>
-	</form>;
+	const submitDisabled = () => {
+		return !(firstName.length && lastName.length && role.length);
+	};
+	return <Form onSubmit={handleSubmit}>
+		<Form.Group className="mb-3" controlId="firstName">
+			<Form.Label>First name:</Form.Label>
+			<Form.Control type="text" value={firstName} onChange={handleFirstNameChange} />
+		</Form.Group>
+		<Form.Group className="mb-3" controlId="lastName">
+			<Form.Label>Last name:</Form.Label>
+			<Form.Control type="text" value={lastName} onChange={handleLastNameChange} />
+		</Form.Group>
+		<Form.Group className="mb-3" controlId="role">
+			<Form.Label>Role:</Form.Label>
+			<Form.Control type="text" value={role} onChange={handleRoleChange} />
+		</Form.Group>
+		<Button disabled={submitDisabled()} variant="primary" type="submit">Submit</Button>
+	</Form>;
 }

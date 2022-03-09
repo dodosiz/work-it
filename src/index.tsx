@@ -3,13 +3,12 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { store } from "./data/store";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { CreateUserForm } from "./view/create-user-form";
-import { UsersList } from "./view/users-list";
+import "./index.css";
+import { App } from "./view/app";
 
 ReactDOM.render(
 	<Provider store={store}>
-		<CreateUserForm />
-		<UsersList />
+		<App />
 	</Provider>,
 	document.getElementById("app"),
 );
