@@ -7,10 +7,12 @@ export function UsersList() {
 	const users = useSelector(usersSelector);
 	return <Table striped bordered hover>
 		<thead>
-			<th>#</th>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Role</th>
+			<tr>
+				<th>#</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Role</th>
+			</tr>
 		</thead>
 		<tbody>
 			{users.map((user, index) => (
