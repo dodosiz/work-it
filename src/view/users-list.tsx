@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { User, usersSelector } from "../data/users";
 
-export function Users() {
+export function UsersList() {
 	const users = useSelector(usersSelector);
 	return <ul>
 		{users.map((user, index) => (

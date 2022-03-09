@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Users component: displays a list of users 1`] = `
+exports[`Users list component: displays a list of users 1`] = `
 <div>
   <ul>
     <li>

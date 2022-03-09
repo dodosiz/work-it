@@ -12,12 +12,17 @@ export function CreateUserForm() {
 	const handleRoleChange: React.ChangeEventHandler<HTMLInputElement> = event => {
 		setRole(event.target.value);
 	};
-	const handleSubmit = () => dispatch(addUser({name, role}));
-	return <form>
+	const handleSubmit: React.FormEventHandler<HTMLFormElement> = event => {
+		event.preventDefault();
+		dispatch(addUser({name, role}));
+		setName("");
+		setRole("");
+	};
+	return <form onSubmit={handleSubmit}>
 		<label htmlFor="name">Name:</label>
 		<input id="name" type="text" value={name} onChange={handleNameChange} />
 		<label htmlFor="role">Role:</label>
 		<input id="role" aria-label="role" type="text" value={role} onChange={handleRoleChange} />
-		<button type="submit" onClick={handleSubmit}>Submit</button>
+		<button type="submit">Submit</button>
 	</form>;
 }
