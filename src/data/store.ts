@@ -7,6 +7,6 @@ export interface AppState {
 
 export const store = configureStore({
 	reducer: {
-		usersState: usersReducer
-	}
+		usersState: usersReducer,
+	},
 });

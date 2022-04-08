@@ -22,7 +22,7 @@ interface AddUserPayload {
 
 const initialState: UsersState = {
 	users: [],
-	userFormOpened: false
+	userFormOpened: false,
 };
 
 const usersSlice = createSlice({
@@ -32,7 +32,7 @@ const usersSlice = createSlice({
 		addUser: (state, action: PayloadAction<AddUserPayload>) => {
 			state.users.push({
 				id: v4(),
-				...action.payload
+				...action.payload,
 			});
 		},
 		openUserForm: (state) => {
@@ -40,12 +40,13 @@ const usersSlice = createSlice({
 		},
 		closeUserForm: (state) => {
 			state.userFormOpened = false;
-		}
-	}
+		},
+	},
 });
 
 export const { addUser, openUserForm, closeUserForm } = usersSlice.actions;
 export const usersReducer = usersSlice.reducer;
 
 export const usersSelector = (state: AppState) => state.usersState.users;
-export const userFormOpenedSelector = (state: AppState) => state.usersState.userFormOpened;
+export const userFormOpenedSelector = (state: AppState) =>
+	state.usersState.userFormOpened;

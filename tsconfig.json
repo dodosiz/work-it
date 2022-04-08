@@ -1,18 +1,13 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "jsx": "react",
-      "moduleResolution": "node",
-      "lib": [
-        "dom",
-        "esnext"
-      ],
-      "strict": true,
-      "sourceMap": true
-    },
-    "exclude": [
-      "node_modules"
-    ]
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"jsx": "react",
+		"moduleResolution": "node",
+		"lib": ["dom", "esnext"],
+		"strict": true,
+		"sourceMap": true
+	},
+	"exclude": ["node_modules"]
 }
