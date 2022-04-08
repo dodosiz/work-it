@@ -1,7 +1,13 @@
 import * as React from "react";
 import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, User, usersSelector } from "../../data/users/users";
+import {
+	deleteUser,
+	editUser,
+	openUserForm,
+	User,
+	usersSelector,
+} from "../../data/users/users";
 import { BsFillTrashFill, BsPencilFill } from "react-icons/bs";
 
 export function UsersList() {
@@ -9,6 +15,10 @@ export function UsersList() {
 	const users = useSelector(usersSelector);
 	const handleDelete = (id: string) => {
 		dispatch(deleteUser({ id }));
+	};
+	const handleEdit = (id: string) => {
+		dispatch(editUser({ id }));
+		dispatch(openUserForm());
 	};
 	return (
 		<Table striped bordered hover>
@@ -27,6 +37,7 @@ export function UsersList() {
 						key={user.id}
 						user={user}
 						index={index}
+						handleEdit={handleEdit}
 						handleDelete={handleDelete}
 					/>
 				))}
@@ -38,18 +49,23 @@ export function UsersList() {
 interface UserProps {
 	index: number;
 	user: User;
+	handleEdit(id: string): void;
 	handleDelete(id: string): void;
 }
 
 function User(props: UserProps) {
 	return (
 		<tr>
-			<td>{props.index}</td>
+			<td>{props.index + 1}</td>
 			<td>{props.user.firstName}</td>
 			<td>{props.user.lastName}</td>
 			<td>{props.user.role}</td>
 			<td>
-				<Button data-testid={`edit-button-${props.index}`} variant="primary">
+				<Button
+					data-testid={`edit-button-${props.index}`}
+					variant="primary"
+					onClick={() => props.handleEdit(props.user.id)}
+				>
 					<BsPencilFill />
 				</Button>{" "}
 				<Button

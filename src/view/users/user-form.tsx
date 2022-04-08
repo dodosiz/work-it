@@ -71,7 +71,7 @@ export function UserForm() {
 				<Form.Control type="text" value={role} onChange={handleRoleChange} />
 			</Form.Group>
 			<Button disabled={submitDisabled()} variant="primary" type="submit">
-				{editedUser ? "Update" : "Create"}
+				Save
 			</Button>{" "}
 			<Button variant="secondary" onClick={() => handleCancel()}>
 				Cancel

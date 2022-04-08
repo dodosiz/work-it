@@ -26,7 +26,7 @@ describe("User form component:", () => {
 		userEvent.type(screen.getByLabelText("First name:"), "Thomas");
 		userEvent.type(screen.getByLabelText("Last name:"), "Edison");
 		userEvent.type(screen.getByLabelText("Role:"), "developer");
-		userEvent.click(screen.getByRole("button", { name: "Create" }));
+		userEvent.click(screen.getByRole("button", { name: "Save" }));
 		expect(store.getState()).toEqual({
 			usersState: {
 				userFormOpened: false,
@@ -89,7 +89,7 @@ describe("User form component:", () => {
 		);
 		userEvent.type(screen.getByLabelText("First name:"), "rge");
 		userEvent.type(screen.getByLabelText("Role:"), "eloper");
-		userEvent.click(screen.getByRole("button", { name: "Update" }));
+		userEvent.click(screen.getByRole("button", { name: "Save" }));
 		expect(store.getState()).toEqual({
 			usersState: {
 				userFormOpened: false,
