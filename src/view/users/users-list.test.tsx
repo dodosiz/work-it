@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import * as React from "react";
 import { Provider } from "react-redux";
-import { usersReducer } from "../../data/users";
+import { usersReducer } from "../../data/users/users";
 import { UsersList } from "./users-list";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -27,6 +27,7 @@ const store = configureStore({
 				},
 			],
 			userFormOpened: false,
+			userIdToEdit: undefined,
 		},
 	},
 });

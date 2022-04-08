@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, User, usersSelector } from "../../data/users";
-import { BsFillTrashFill } from "react-icons/bs";
+import { deleteUser, User, usersSelector } from "../../data/users/users";
+import { BsFillTrashFill, BsPencilFill } from "react-icons/bs";
 
 export function UsersList() {
 	const dispatch = useDispatch();
@@ -49,6 +49,9 @@ function User(props: UserProps) {
 			<td>{props.user.lastName}</td>
 			<td>{props.user.role}</td>
 			<td>
+				<Button data-testid={`edit-button-${props.index}`} variant="primary">
+					<BsPencilFill />
+				</Button>{" "}
 				<Button
 					data-testid={`delete-button-${props.index}`}
 					variant="danger"

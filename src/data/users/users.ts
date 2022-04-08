@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppState } from "./store";
+import { AppState } from "../store";
 import { v4 } from "uuid";
 
 export interface UsersState {
 	users: User[];
+	userIdToEdit: string | undefined;
 	userFormOpened: boolean;
 }
 
@@ -20,12 +21,20 @@ interface AddUserPayload {
 	role: string;
 }
 
-interface DeleteUserPayload {
+interface UpdateUserPayload {
+	id: string;
+	firstName: string;
+	lastName: string;
+	role: string;
+}
+
+interface UserIdPayload {
 	id: string;
 }
 
 const initialState: UsersState = {
 	users: [],
+	userIdToEdit: undefined,
 	userFormOpened: false,
 };
 
@@ -39,11 +48,20 @@ const usersSlice = createSlice({
 				...action.payload,
 			});
 		},
-		deleteUser: (state, action: PayloadAction<DeleteUserPayload>) => {
+		deleteUser: (state, action: PayloadAction<UserIdPayload>) => {
 			const index = state.users.findIndex(
 				(user) => user.id === action.payload.id
 			);
 			state.users.splice(index, 1);
+		},
+		editUser: (state, action: PayloadAction<UserIdPayload>) => {
+			state.userIdToEdit = action.payload.id;
+		},
+		updateUser: (state, action: PayloadAction<UpdateUserPayload>) => {
+			const index = state.users.findIndex(
+				(user) => user.id === action.payload.id
+			);
+			state.users.splice(index, 1, action.payload);
 		},
 		openUserForm: (state) => {
 			state.userFormOpened = true;
@@ -54,10 +72,21 @@ const usersSlice = createSlice({
 	},
 });
 
-export const { addUser, deleteUser, openUserForm, closeUserForm } =
-	usersSlice.actions;
+export const {
+	addUser,
+	deleteUser,
+	editUser,
+	updateUser,
+	openUserForm,
+	closeUserForm,
+} = usersSlice.actions;
 export const usersReducer = usersSlice.reducer;
 
 export const usersSelector = (state: AppState) => state.usersState.users;
 export const userFormOpenedSelector = (state: AppState) =>
 	state.usersState.userFormOpened;
+export const editedUserSelector = (state: AppState) => {
+	return state.usersState.users.find(
+		(u) => u.id === state.usersState.userIdToEdit
+	);
+};

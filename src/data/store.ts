@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { usersReducer, UsersState } from "./users";
+import { usersReducer, UsersState } from "./users/users";
 
 export interface AppState {
 	usersState: UsersState;

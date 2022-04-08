@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { addUser, closeUserForm } from "../../data/users";
+import { addUser, closeUserForm } from "../../data/users/users";
 
-export function CreateUserForm() {
+export function UserForm() {
 	const dispatch = useDispatch();
 	const [firstName, setFirstName] = React.useState("");
 	const [lastName, setLastName] = React.useState("");
@@ -26,6 +26,9 @@ export function CreateUserForm() {
 	const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault();
 		dispatch(addUser({ firstName, lastName, role }));
+		dispatch(closeUserForm());
+	};
+	const handleCancel = () => {
 		dispatch(closeUserForm());
 	};
 	const submitDisabled = () => {
@@ -54,7 +57,10 @@ export function CreateUserForm() {
 				<Form.Control type="text" value={role} onChange={handleRoleChange} />
 			</Form.Group>
 			<Button disabled={submitDisabled()} variant="primary" type="submit">
-				Submit
+				Save
+			</Button>{" "}
+			<Button variant="secondary" onClick={() => handleCancel()}>
+				Cancel
 			</Button>
 		</Form>
 	);

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { openUserForm } from "../data/users";
+import { openUserForm } from "../data/users/users";
 import { UsersPage } from "./users/users-page";
 
 export function App() {
