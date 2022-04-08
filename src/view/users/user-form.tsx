@@ -1,13 +1,23 @@
 import * as React from "react";
 import { Button, Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { addUser, closeUserForm } from "../../data/users/users";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	addUser,
+	closeUserForm,
+	editedUserSelector,
+	updateUser,
+} from "../../data/users/users";
 
 export function UserForm() {
 	const dispatch = useDispatch();
-	const [firstName, setFirstName] = React.useState("");
-	const [lastName, setLastName] = React.useState("");
-	const [role, setRole] = React.useState("");
+	const editedUser = useSelector(editedUserSelector);
+	const [firstName, setFirstName] = React.useState(
+		editedUser ? editedUser.firstName : ""
+	);
+	const [lastName, setLastName] = React.useState(
+		editedUser ? editedUser.lastName : ""
+	);
+	const [role, setRole] = React.useState(editedUser ? editedUser.role : "");
 	const handleFirstNameChange: React.ChangeEventHandler<HTMLInputElement> = (
 		event
 	) => {
@@ -25,7 +35,11 @@ export function UserForm() {
 	};
 	const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault();
-		dispatch(addUser({ firstName, lastName, role }));
+		if (editedUser) {
+			dispatch(updateUser({ id: editedUser.id, firstName, lastName, role }));
+		} else {
+			dispatch(addUser({ firstName, lastName, role }));
+		}
 		dispatch(closeUserForm());
 	};
 	const handleCancel = () => {
@@ -57,7 +71,7 @@ export function UserForm() {
 				<Form.Control type="text" value={role} onChange={handleRoleChange} />
 			</Form.Group>
 			<Button disabled={submitDisabled()} variant="primary" type="submit">
-				Save
+				{editedUser ? "Update" : "Create"}
 			</Button>{" "}
 			<Button variant="secondary" onClick={() => handleCancel()}>
 				Cancel

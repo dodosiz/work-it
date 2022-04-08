@@ -26,7 +26,7 @@ describe("User form component:", () => {
 		userEvent.type(screen.getByLabelText("First name:"), "Thomas");
 		userEvent.type(screen.getByLabelText("Last name:"), "Edison");
 		userEvent.type(screen.getByLabelText("Role:"), "developer");
-		userEvent.click(screen.getByRole("button", { name: "Save" }));
+		userEvent.click(screen.getByRole("button", { name: "Create" }));
 		expect(store.getState()).toEqual({
 			usersState: {
 				userFormOpened: false,
@@ -61,5 +61,48 @@ describe("User form component:", () => {
 		);
 		userEvent.click(screen.getByRole("button", { name: "Cancel" }));
 		expect(store.getState().usersState.userFormOpened).toBeFalsy();
+	});
+	test("update a user", () => {
+		const store = configureStore({
+			reducer: {
+				usersState: usersReducer,
+			},
+			preloadedState: {
+				usersState: {
+					users: [
+						{
+							id: "1",
+							firstName: "Geo",
+							lastName: "Example",
+							role: "Dev",
+						},
+					],
+					userFormOpened: true,
+					userIdToEdit: "1",
+				},
+			},
+		});
+		render(
+			<Provider store={store}>
+				<UserForm />
+			</Provider>
+		);
+		userEvent.type(screen.getByLabelText("First name:"), "rge");
+		userEvent.type(screen.getByLabelText("Role:"), "eloper");
+		userEvent.click(screen.getByRole("button", { name: "Update" }));
+		expect(store.getState()).toEqual({
+			usersState: {
+				userFormOpened: false,
+				userIdToEdit: undefined,
+				users: [
+					{
+						id: "1",
+						firstName: "George",
+						lastName: "Example",
+						role: "Developer",
+					},
+				],
+			},
+		});
 	});
 });

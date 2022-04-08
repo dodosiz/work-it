@@ -68,6 +68,7 @@ const usersSlice = createSlice({
 		},
 		closeUserForm: (state) => {
 			state.userFormOpened = false;
+			state.userIdToEdit = undefined;
 		},
 	},
 });
