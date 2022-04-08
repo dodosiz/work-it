@@ -50,6 +50,7 @@ function User(props: UserProps) {
 			<td>{props.user.role}</td>
 			<td>
 				<Button
+					data-testid={`delete-button-${props.index}`}
 					variant="danger"
 					onClick={() => props.handleDelete(props.user.id)}
 				>
