@@ -8,17 +8,18 @@ jest.mock("uuid", () => ({
 describe("Users reducer:", () => {
 	test("initial state", () => {
 		const nextState = usersReducer(undefined, {type: ""});
-		expect(nextState).toEqual({users: []});
+		expect(nextState).toEqual({users: [], userFormOpened: false});
 	});
 	test("add a user", () => {
 		const initialState: UsersState = {
-			users: []
+			users: [],
+			userFormOpened: false
 		};
 		const nextState = usersReducer(
 			initialState,
 			addUser({firstName: "Tom", lastName: "Johnson", role: "project manager"}));
-		expect(nextState).toEqual({
-			users: [{id: "userId", firstName: "Tom", lastName: "Johnson", role: "project manager"}]
-		});
+		expect(nextState.users).toEqual(
+			[{id: "userId", firstName: "Tom", lastName: "Johnson", role: "project manager"}]
+		);
 	});
 });

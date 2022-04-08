@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { User, usersSelector } from "../data/users";
+import { User, usersSelector } from "../../data/users";
 
 export function UsersList() {
 	const users = useSelector(usersSelector);

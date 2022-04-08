@@ -1,6 +1,6 @@
 import * as React from "react";
 import { configureStore } from "@reduxjs/toolkit";
-import { usersReducer } from "../data/users";
+import { usersReducer } from "../../data/users";
 import { Provider } from "react-redux";
 import { CreateUserForm } from "./create-user-form";
 import { render, screen } from "@testing-library/react";
@@ -27,6 +27,7 @@ describe("Create user form component:", () => {
 		userEvent.click(screen.getByRole("button", {name: "Submit"}));
 		expect(store.getState()).toEqual({
 			usersState: {
+				userFormOpened: false,
 				users: [{id: "userId", firstName: "Thomas", lastName: "Edison", role: "developer"}]
 			}
 		});

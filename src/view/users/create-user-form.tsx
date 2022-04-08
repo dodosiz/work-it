@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { addUser } from "../data/users";
+import { addUser, closeUserForm } from "../../data/users";
 
 export function CreateUserForm() {
 	const dispatch = useDispatch();
@@ -20,9 +20,7 @@ export function CreateUserForm() {
 	const handleSubmit: React.FormEventHandler<HTMLFormElement> = event => {
 		event.preventDefault();
 		dispatch(addUser({firstName, lastName, role}));
-		setFirstName("");
-		setLastName("");
-		setRole("");
+		dispatch(closeUserForm());
 	};
 	const submitDisabled = () => {
 		return !(firstName.length && lastName.length && role.length);
