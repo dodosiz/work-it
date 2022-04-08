@@ -20,6 +20,10 @@ interface AddUserPayload {
 	role: string;
 }
 
+interface DeleteUserPayload {
+	id: string;
+}
+
 const initialState: UsersState = {
 	users: [],
 	userFormOpened: false,
@@ -35,6 +39,12 @@ const usersSlice = createSlice({
 				...action.payload,
 			});
 		},
+		deleteUser: (state, action: PayloadAction<DeleteUserPayload>) => {
+			const index = state.users.findIndex(
+				(user) => user.id === action.payload.id
+			);
+			state.users.splice(index, 1);
+		},
 		openUserForm: (state) => {
 			state.userFormOpened = true;
 		},
@@ -44,7 +54,8 @@ const usersSlice = createSlice({
 	},
 });
 
-export const { addUser, openUserForm, closeUserForm } = usersSlice.actions;
+export const { addUser, deleteUser, openUserForm, closeUserForm } =
+	usersSlice.actions;
 export const usersReducer = usersSlice.reducer;
 
 export const usersSelector = (state: AppState) => state.usersState.users;

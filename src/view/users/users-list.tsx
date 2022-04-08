@@ -1,10 +1,15 @@
 import * as React from "react";
-import { Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { User, usersSelector } from "../../data/users";
+import { Table, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteUser, User, usersSelector } from "../../data/users";
+import { BsFillTrashFill } from "react-icons/bs";
 
 export function UsersList() {
+	const dispatch = useDispatch();
 	const users = useSelector(usersSelector);
+	const handleDelete = (id: string) => {
+		dispatch(deleteUser({ id }));
+	};
 	return (
 		<Table striped bordered hover>
 			<thead>
@@ -13,11 +18,17 @@ export function UsersList() {
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Role</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
 				{users.map((user, index) => (
-					<User key={user.id} user={user} index={index} />
+					<User
+						key={user.id}
+						user={user}
+						index={index}
+						handleDelete={handleDelete}
+					/>
 				))}
 			</tbody>
 		</Table>
@@ -27,6 +38,7 @@ export function UsersList() {
 interface UserProps {
 	index: number;
 	user: User;
+	handleDelete(id: string): void;
 }
 
 function User(props: UserProps) {
@@ -36,6 +48,14 @@ function User(props: UserProps) {
 			<td>{props.user.firstName}</td>
 			<td>{props.user.lastName}</td>
 			<td>{props.user.role}</td>
+			<td>
+				<Button
+					variant="danger"
+					onClick={() => props.handleDelete(props.user.id)}
+				>
+					<BsFillTrashFill />
+				</Button>
+			</td>
 		</tr>
 	);
 }
