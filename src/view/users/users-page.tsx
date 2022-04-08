@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeUserForm, userFormOpenedSelector } from "../../data/users/users";
-import { ModalDialog } from "../modal-dialog";
+import { ModalDialog } from "../modal/modal-dialog";
 import { UserForm } from "./user-form";
 import { UsersList } from "./users-list";
 

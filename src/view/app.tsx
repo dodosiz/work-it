@@ -3,6 +3,7 @@ import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { openUserForm } from "../data/users/users";
 import { UsersPage } from "./users/users-page";
+import { NotificationAlert } from "./notifications/notification-alert";
 
 export function App() {
 	const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export function App() {
 			<div className="container main">
 				<UsersPage />
 			</div>
+			<NotificationAlert />
 		</div>
 	);
 }

@@ -5,6 +5,7 @@ import { usersReducer } from "../../data/users/users";
 import { UsersList } from "./users-list";
 import { render, RenderResult, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { notificationsReducer } from "../../data/notifications/notifications";
 
 describe("Users list component:", () => {
 	let store: EnhancedStore;
@@ -13,6 +14,7 @@ describe("Users list component:", () => {
 		store = configureStore({
 			reducer: {
 				usersState: usersReducer,
+				notifications: notificationsReducer,
 			},
 			preloadedState: {
 				usersState: {
@@ -54,6 +56,9 @@ describe("Users list component:", () => {
 				role: "developer",
 			},
 		]);
+		expect(store.getState().notifications).toEqual({
+			message: "Deleted user Nick Gates.",
+		});
 	});
 	test("edit a user", () => {
 		userEvent.click(screen.getByTestId("edit-button-1"));

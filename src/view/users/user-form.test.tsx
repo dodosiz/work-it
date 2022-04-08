@@ -6,6 +6,7 @@ import { UserForm } from "./user-form";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "uuid";
+import { notificationsReducer } from "../../data/notifications/notifications";
 
 jest.mock("uuid", () => ({
 	v4: jest.fn().mockReturnValue("userId"),
@@ -16,6 +17,7 @@ describe("User form component:", () => {
 		const store = configureStore({
 			reducer: {
 				usersState: usersReducer,
+				notifications: notificationsReducer,
 			},
 		});
 		render(
@@ -28,6 +30,9 @@ describe("User form component:", () => {
 		userEvent.type(screen.getByLabelText("Role:"), "developer");
 		userEvent.click(screen.getByRole("button", { name: "Save" }));
 		expect(store.getState()).toEqual({
+			notifications: {
+				message: "Added user Thomas Edison.",
+			},
 			usersState: {
 				userFormOpened: false,
 				users: [
@@ -66,6 +71,7 @@ describe("User form component:", () => {
 		const store = configureStore({
 			reducer: {
 				usersState: usersReducer,
+				notifications: notificationsReducer,
 			},
 			preloadedState: {
 				usersState: {
@@ -91,6 +97,9 @@ describe("User form component:", () => {
 		userEvent.type(screen.getByLabelText("Role:"), "eloper");
 		userEvent.click(screen.getByRole("button", { name: "Save" }));
 		expect(store.getState()).toEqual({
+			notifications: {
+				message: "Updated user George Example.",
+			},
 			usersState: {
 				userFormOpened: false,
 				userIdToEdit: undefined,

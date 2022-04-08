@@ -2,6 +2,9 @@ import { v4 } from "uuid";
 import { AppState } from "./store";
 
 export const DATA: AppState = {
+	notifications: {
+		message: undefined,
+	},
 	usersState: {
 		userFormOpened: false,
 		userIdToEdit: undefined,

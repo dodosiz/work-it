@@ -9,12 +9,18 @@ import {
 	usersSelector,
 } from "../../data/users/users";
 import { BsFillTrashFill, BsPencilFill } from "react-icons/bs";
+import { addNotification } from "../../data/notifications/notifications";
 
 export function UsersList() {
 	const dispatch = useDispatch();
 	const users = useSelector(usersSelector);
-	const handleDelete = (id: string) => {
-		dispatch(deleteUser({ id }));
+	const handleDelete = (user: User) => {
+		dispatch(deleteUser({ id: user.id }));
+		dispatch(
+			addNotification({
+				message: `Deleted user ${user.firstName} ${user.lastName}.`,
+			})
+		);
 	};
 	const handleEdit = (id: string) => {
 		dispatch(editUser({ id }));
@@ -50,7 +56,7 @@ interface UserProps {
 	index: number;
 	user: User;
 	handleEdit(id: string): void;
-	handleDelete(id: string): void;
+	handleDelete(user: User): void;
 }
 
 function User(props: UserProps) {
@@ -71,7 +77,7 @@ function User(props: UserProps) {
 				<Button
 					data-testid={`delete-button-${props.index}`}
 					variant="danger"
-					onClick={() => props.handleDelete(props.user.id)}
+					onClick={() => props.handleDelete(props.user)}
 				>
 					<BsFillTrashFill />
 				</Button>

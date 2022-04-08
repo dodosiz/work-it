@@ -1,0 +1,7 @@
+.notification-alert {
+	position: fixed;
+	bottom: 1em;
+	right: 1em;
+	transition: all 250ms linear;
+	width: 40%;
+}

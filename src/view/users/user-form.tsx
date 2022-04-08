@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { addNotification } from "../../data/notifications/notifications";
 import {
 	addUser,
 	closeUserForm,
@@ -37,8 +38,18 @@ export function UserForm() {
 		event.preventDefault();
 		if (editedUser) {
 			dispatch(updateUser({ id: editedUser.id, firstName, lastName, role }));
+			dispatch(
+				addNotification({
+					message: `Updated user ${firstName} ${lastName}.`,
+				})
+			);
 		} else {
 			dispatch(addUser({ firstName, lastName, role }));
+			dispatch(
+				addNotification({
+					message: `Added user ${firstName} ${lastName}.`,
+				})
+			);
 		}
 		dispatch(closeUserForm());
 	};
