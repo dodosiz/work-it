@@ -19,20 +19,24 @@ export function UserForm() {
 		editedUser ? editedUser.lastName : ""
 	);
 	const [role, setRole] = React.useState(editedUser ? editedUser.role : "");
+	const [dirty, setDirty] = React.useState(false);
 	const handleFirstNameChange: React.ChangeEventHandler<HTMLInputElement> = (
 		event
 	) => {
 		setFirstName(event.target.value);
+		setDirty(true);
 	};
 	const handleLastNameChange: React.ChangeEventHandler<HTMLInputElement> = (
 		event
 	) => {
 		setLastName(event.target.value);
+		setDirty(true);
 	};
 	const handleRoleChange: React.ChangeEventHandler<HTMLInputElement> = (
 		event
 	) => {
 		setRole(event.target.value);
+		setDirty(true);
 	};
 	const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault();
@@ -57,7 +61,10 @@ export function UserForm() {
 		dispatch(closeUserForm());
 	};
 	const submitDisabled = () => {
-		return !(firstName.length && lastName.length && role.length);
+		return !isValid() || !dirty;
+	};
+	const isValid = () => {
+		return firstName.length && lastName.length && role.length;
 	};
 	return (
 		<Form onSubmit={handleSubmit}>

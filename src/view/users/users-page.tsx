@@ -1,6 +1,10 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { closeUserForm, userFormOpenedSelector } from "../../data/users/users";
+import {
+	closeUserForm,
+	editedUserSelector,
+	userFormOpenedSelector,
+} from "../../data/users/users";
 import { ModalDialog } from "../modal/modal-dialog";
 import { UserForm } from "./user-form";
 import { UsersList } from "./users-list";
@@ -8,6 +12,7 @@ import { UsersList } from "./users-list";
 export function UsersPage() {
 	const dispatch = useDispatch();
 	const userFormOpened = useSelector(userFormOpenedSelector);
+	const editedUser = useSelector(editedUserSelector);
 	const handleCloseUserForm = () => {
 		dispatch(closeUserForm());
 	};
@@ -16,7 +21,7 @@ export function UsersPage() {
 			<ModalDialog
 				handleClose={handleCloseUserForm}
 				show={userFormOpened}
-				title="Create new user"
+				title={editedUser ? "Edit user" : "Create new user"}
 			>
 				<UserForm />
 			</ModalDialog>
