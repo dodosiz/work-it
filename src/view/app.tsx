@@ -14,7 +14,7 @@ export function App() {
 		<div>
 			<Navbar expand="lg" variant="light" bg="light">
 				<Container>
-					<Navbar.Brand>Work IT</Navbar.Brand>
+					<Navbar.Brand style={{ color: "lightblue" }}>Work IT</Navbar.Brand>
 					<Navbar.Collapse id="basic-navbar-nav">
 						<Nav className="me-auto">
 							<Button variant="success" onClick={handleCreateUserClick}>
