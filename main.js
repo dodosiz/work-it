@@ -61512,7 +61512,7 @@ function App() {
     return (React.createElement("div", null,
         React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "light", bg: "light" },
             React.createElement(react_bootstrap_1.Container, null,
-                React.createElement(react_bootstrap_1.Navbar.Brand, null, "Work IT"),
+                React.createElement(react_bootstrap_1.Navbar.Brand, { style: { color: "lightblue" } }, "Work IT"),
                 React.createElement(react_bootstrap_1.Navbar.Collapse, { id: "basic-navbar-nav" },
                     React.createElement(react_bootstrap_1.Nav, { className: "me-auto" },
                         React.createElement(react_bootstrap_1.Button, { variant: "success", onClick: handleCreateUserClick }, "Create User"))))),
