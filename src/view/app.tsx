@@ -20,13 +20,13 @@ export function App() {
 								active={page === "tasks"}
 								onClick={() => setPage("tasks")}
 							>
-								Tasks
+								To Do Tasks
 							</Nav.Link>
 							<Nav.Link
 								active={page === "users"}
 								onClick={() => setPage("users")}
 							>
-								Users
+								Roles
 							</Nav.Link>
 						</Nav>
 					</Navbar.Collapse>

@@ -11,15 +11,15 @@ export interface TasksState {
 export interface Task {
 	id: string;
 	title: string;
-	description: string | undefined;
-	assignee: User;
+	description: string;
+	assignee: User | undefined;
 	dateFinished: string | undefined;
 }
 
 interface CreateTaskPayload {
 	title: string;
-	description: string | undefined;
-	assignee: User;
+	description: string;
+	assignee: User | undefined;
 }
 
 const initialState: TasksState = {
