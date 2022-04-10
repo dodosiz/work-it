@@ -9334,6 +9334,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/view/tasks/tasks-list.css":
+/*!***************************************!*\
+  !*** ./src/view/tasks/tasks-list.css ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./node_modules/object-assign/index.js":
 /*!*********************************************!*\
   !*** ./node_modules/object-assign/index.js ***!
@@ -61213,89 +61226,141 @@ if (false) {} else {
 /*!*******************************!*\
   !*** ./src/data/mock-data.ts ***!
   \*******************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DATA = void 0;
-var uuid_1 = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/index.js");
 exports.DATA = {
     notifications: {
         message: undefined,
+    },
+    tasksState: {
+        tasks: [
+            {
+                id: "task1",
+                assignee: {
+                    id: "user1",
+                    firstName: "Alejandro",
+                    lastName: "Matthews",
+                    role: "Project manager",
+                },
+                title: "Plan the requirements for the next release.",
+                dateFinished: undefined,
+                description: "",
+            },
+            {
+                id: "task2",
+                assignee: {
+                    id: "user1",
+                    firstName: "Alejandro",
+                    lastName: "Matthews",
+                    role: "Project manager",
+                },
+                title: "Meet with the stakeholders to discuss the new requirements.",
+                dateFinished: undefined,
+                description: "",
+            },
+            {
+                id: "task3",
+                assignee: {
+                    id: "user2",
+                    firstName: "Mai",
+                    lastName: "Yoder",
+                    role: "UI/UX designer",
+                },
+                title: "Design the mocks for the new user interface.",
+                dateFinished: undefined,
+                description: "",
+            },
+            {
+                id: "task4",
+                assignee: {
+                    id: "user7",
+                    firstName: "Erik",
+                    lastName: "Ferguson",
+                    role: "Business analyst",
+                },
+                title: "Analyse the dependencies between the upcomming requirements.",
+                dateFinished: undefined,
+                description: "",
+            },
+        ],
+        taskFormOpened: false,
     },
     usersState: {
         userFormOpened: false,
         userIdToEdit: undefined,
         users: [
             {
-                id: (0, uuid_1.v4)(),
+                id: "user1",
                 firstName: "Alejandro",
                 lastName: "Matthews",
                 role: "Project manager",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user2",
                 firstName: "Mai",
                 lastName: "Yoder",
                 role: "UI/UX designer",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user3",
                 firstName: "Wade",
                 lastName: "Delgado",
                 role: "Marketing",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user4",
                 firstName: "Angeline",
                 lastName: "Shea",
                 role: "Senior front end developer",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user5",
                 firstName: "Claudine",
                 lastName: "Martin",
                 role: "Section back end developer",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user6",
                 firstName: "Cruz",
                 lastName: "Russo",
                 role: "DevOps",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user7",
                 firstName: "Erik",
                 lastName: "Ferguson",
                 role: "Business analyst",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user8",
                 firstName: "Charles",
                 lastName: "Harrell",
                 role: "Data analyst",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user9",
                 firstName: "Lonnie",
                 lastName: "Wade",
                 role: "Security engineer",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user10",
                 firstName: "Cassie",
                 lastName: "Chung",
                 role: "Quality assurance",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user11",
                 firstName: "Dana",
                 lastName: "Montes",
                 role: "Junior developer",
             },
             {
-                id: (0, uuid_1.v4)(),
+                id: "user12",
                 firstName: "Ladonna",
                 lastName: "Ponce",
                 role: "Junior developer",
@@ -61357,14 +61422,77 @@ exports.store = void 0;
 var toolkit_1 = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
 var mock_data_1 = __webpack_require__(/*! ./mock-data */ "./src/data/mock-data.ts");
 var notifications_1 = __webpack_require__(/*! ./notifications/notifications */ "./src/data/notifications/notifications.ts");
+var tasks_1 = __webpack_require__(/*! ./tasks/tasks */ "./src/data/tasks/tasks.ts");
 var users_1 = __webpack_require__(/*! ./users/users */ "./src/data/users/users.ts");
 exports.store = (0, toolkit_1.configureStore)({
     reducer: {
         usersState: users_1.usersReducer,
+        tasksState: tasks_1.tasksReducer,
         notifications: notifications_1.notificationsReducer,
     },
     preloadedState: mock_data_1.DATA,
 });
+
+
+/***/ }),
+
+/***/ "./src/data/tasks/tasks.ts":
+/*!*********************************!*\
+  !*** ./src/data/tasks/tasks.ts ***!
+  \*********************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.taskFormOpenedSelector = exports.finishedTasksSelector = exports.toDoTasksSelector = exports.tasksReducer = exports.closeTaskForm = exports.openTaskForm = exports.createTask = void 0;
+var toolkit_1 = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
+var uuid_1 = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/index.js");
+var initialState = {
+    tasks: [],
+    taskFormOpened: false,
+};
+var tasksSlice = (0, toolkit_1.createSlice)({
+    name: "tasks",
+    initialState: initialState,
+    reducers: {
+        createTask: function (state, action) {
+            state.tasks.push(__assign({ id: (0, uuid_1.v4)(), dateFinished: undefined }, action.payload));
+        },
+        openTaskForm: function (state) {
+            state.taskFormOpened = true;
+        },
+        closeTaskForm: function (state) {
+            state.taskFormOpened = false;
+        },
+    },
+});
+exports.createTask = (_a = tasksSlice.actions, _a.createTask), exports.openTaskForm = _a.openTaskForm, exports.closeTaskForm = _a.closeTaskForm;
+exports.tasksReducer = tasksSlice.reducer;
+var toDoTasksSelector = function (state) {
+    return state.tasksState.tasks.filter(function (task) { return task.dateFinished === undefined; });
+};
+exports.toDoTasksSelector = toDoTasksSelector;
+var finishedTasksSelector = function (state) {
+    return state.tasksState.tasks.filter(function (task) { return task.dateFinished !== undefined; });
+};
+exports.finishedTasksSelector = finishedTasksSelector;
+var taskFormOpenedSelector = function (state) {
+    return state.tasksState.taskFormOpened;
+};
+exports.taskFormOpenedSelector = taskFormOpenedSelector;
 
 
 /***/ }),
@@ -61500,24 +61628,22 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.App = void 0;
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-var users_1 = __webpack_require__(/*! ../data/users/users */ "./src/data/users/users.ts");
 var users_page_1 = __webpack_require__(/*! ./users/users-page */ "./src/view/users/users-page.tsx");
 var notification_alert_1 = __webpack_require__(/*! ./notifications/notification-alert */ "./src/view/notifications/notification-alert.tsx");
+var tasks_page_1 = __webpack_require__(/*! ./tasks/tasks-page */ "./src/view/tasks/tasks-page.tsx");
 function App() {
-    var dispatch = (0, react_redux_1.useDispatch)();
-    var handleCreateUserClick = function () {
-        dispatch((0, users_1.openUserForm)());
-    };
+    var _a = React.useState("tasks"), page = _a[0], setPage = _a[1];
     return (React.createElement("div", null,
-        React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "light", bg: "light" },
+        React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "dark", bg: "dark" },
             React.createElement(react_bootstrap_1.Container, null,
                 React.createElement(react_bootstrap_1.Navbar.Brand, { style: { color: "lightblue" } }, "Work IT"),
+                React.createElement(react_bootstrap_1.Navbar.Toggle, { "aria-controls": "basic-navbar-nav" }),
                 React.createElement(react_bootstrap_1.Navbar.Collapse, { id: "basic-navbar-nav" },
                     React.createElement(react_bootstrap_1.Nav, { className: "me-auto" },
-                        React.createElement(react_bootstrap_1.Button, { variant: "success", onClick: handleCreateUserClick }, "Create User"))))),
-        React.createElement("div", { className: "container main" },
-            React.createElement(users_page_1.UsersPage, null)),
+                        React.createElement(react_bootstrap_1.Nav.Link, { active: page === "tasks", onClick: function () { return setPage("tasks"); } }, "To Do Tasks"),
+                        React.createElement(react_bootstrap_1.Nav.Link, { active: page === "users", onClick: function () { return setPage("users"); } }, "Roles"))))),
+        page === "tasks" && React.createElement(tasks_page_1.TasksPage, null),
+        page === "users" && React.createElement(users_page_1.UsersPage, null),
         React.createElement(notification_alert_1.NotificationAlert, null)));
 }
 exports.App = App;
@@ -61626,6 +61752,224 @@ function NotificationAlert() {
         React.createElement(react_bootstrap_1.Alert, { className: "notification-alert", dismissible: true, show: show, variant: "success", onClose: function () { return handleClose(); } }, notification)));
 }
 exports.NotificationAlert = NotificationAlert;
+
+
+/***/ }),
+
+/***/ "./src/view/tasks/task-form.tsx":
+/*!**************************************!*\
+  !*** ./src/view/tasks/task-form.tsx ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TaskForm = void 0;
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var notifications_1 = __webpack_require__(/*! ../../data/notifications/notifications */ "./src/data/notifications/notifications.ts");
+var tasks_1 = __webpack_require__(/*! ../../data/tasks/tasks */ "./src/data/tasks/tasks.ts");
+var users_1 = __webpack_require__(/*! ../../data/users/users */ "./src/data/users/users.ts");
+function TaskForm() {
+    var dispatch = (0, react_redux_1.useDispatch)();
+    var users = (0, react_redux_1.useSelector)(users_1.usersSelector);
+    var _a = React.useState(""), title = _a[0], setTitle = _a[1];
+    var _b = React.useState(""), description = _b[0], setDescription = _b[1];
+    var _c = React.useState(undefined), userId = _c[0], setUserId = _c[1];
+    var _d = React.useState(false), dirty = _d[0], setDirty = _d[1];
+    var handleTitleChange = function (event) {
+        setTitle(event.target.value);
+        setDirty(true);
+    };
+    var handleDescriptionChange = function (event) {
+        setDescription(event.target.value);
+        setDirty(true);
+    };
+    var handleAssigneeChange = function (event) {
+        setUserId(event.target.value);
+        setDirty(true);
+    };
+    var handleSubmit = function (event) {
+        event.preventDefault();
+        var assignee = users.find(function (user) { return user.id === userId; });
+        dispatch((0, tasks_1.createTask)({ title: title, description: description, assignee: assignee }));
+        dispatch((0, notifications_1.addNotification)({
+            message: "Created task: ".concat(title),
+        }));
+        dispatch((0, tasks_1.closeTaskForm)());
+    };
+    var handleCancel = function () {
+        dispatch((0, tasks_1.closeTaskForm)());
+    };
+    var submitDisabled = function () {
+        return !isValid() || !dirty;
+    };
+    var isValid = function () {
+        return title && userId;
+    };
+    return (React.createElement(react_bootstrap_1.Form, { onSubmit: handleSubmit },
+        React.createElement(react_bootstrap_1.Form.Group, { className: "mb-3", controlId: "title" },
+            React.createElement(react_bootstrap_1.Form.Label, null, "Title:"),
+            React.createElement(react_bootstrap_1.Form.Control, { type: "text", value: title, onChange: handleTitleChange })),
+        React.createElement(react_bootstrap_1.Form.Group, { className: "mb-3", controlId: "description" },
+            React.createElement(react_bootstrap_1.Form.Label, null, "Description:"),
+            React.createElement(react_bootstrap_1.Form.Control, { type: "textarea", value: description, onChange: handleDescriptionChange })),
+        React.createElement(react_bootstrap_1.Form.Group, { className: "mb-3", controlId: "assignee" },
+            React.createElement(react_bootstrap_1.Form.Select, { "aria-label": "Assignee", onChange: handleAssigneeChange, value: userId, "data-testid": "assignee" },
+                React.createElement("option", null, "Assignee"),
+                users.map(function (user) { return (React.createElement("option", { key: user.id, value: user.id }, user.firstName + " " + user.lastName)); }))),
+        React.createElement(react_bootstrap_1.Button, { disabled: submitDisabled(), variant: "primary", type: "submit" }, "Save"),
+        " ",
+        React.createElement(react_bootstrap_1.Button, { variant: "secondary", onClick: function () { return handleCancel(); } }, "Cancel")));
+}
+exports.TaskForm = TaskForm;
+
+
+/***/ }),
+
+/***/ "./src/view/tasks/tasks-page.tsx":
+/*!***************************************!*\
+  !*** ./src/view/tasks/tasks-page.tsx ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TasksPage = void 0;
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var tasks_1 = __webpack_require__(/*! ../../data/tasks/tasks */ "./src/data/tasks/tasks.ts");
+var modal_dialog_1 = __webpack_require__(/*! ../modal/modal-dialog */ "./src/view/modal/modal-dialog.tsx");
+var task_form_1 = __webpack_require__(/*! ./task-form */ "./src/view/tasks/task-form.tsx");
+var todo_tasks_list_1 = __webpack_require__(/*! ./todo-tasks-list */ "./src/view/tasks/todo-tasks-list.tsx");
+function TasksPage() {
+    var dispatch = (0, react_redux_1.useDispatch)();
+    var tasks = (0, react_redux_1.useSelector)(tasks_1.toDoTasksSelector);
+    var taskFormOpened = (0, react_redux_1.useSelector)(tasks_1.taskFormOpenedSelector);
+    var handleCloseTaskForm = function () {
+        dispatch((0, tasks_1.closeTaskForm)());
+    };
+    var handleCreateTaskClick = function () {
+        dispatch((0, tasks_1.openTaskForm)());
+    };
+    return (React.createElement(React.Fragment, null,
+        React.createElement(modal_dialog_1.ModalDialog, { handleClose: handleCloseTaskForm, show: taskFormOpened, title: "Create new task" },
+            React.createElement(task_form_1.TaskForm, null)),
+        React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "light", bg: "light" },
+            React.createElement(react_bootstrap_1.Container, null,
+                React.createElement(react_bootstrap_1.Nav, { className: "me-auto" },
+                    React.createElement(react_bootstrap_1.Button, { variant: "success", onClick: handleCreateTaskClick }, "Create Task")))),
+        React.createElement(react_bootstrap_1.Container, null,
+            React.createElement(todo_tasks_list_1.TodoTasksList, { tasks: tasks }))));
+}
+exports.TasksPage = TasksPage;
+
+
+/***/ }),
+
+/***/ "./src/view/tasks/todo-tasks-list.tsx":
+/*!********************************************!*\
+  !*** ./src/view/tasks/todo-tasks-list.tsx ***!
+  \********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TodoTasksList = void 0;
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+__webpack_require__(/*! ./tasks-list.css */ "./src/view/tasks/tasks-list.css");
+function TodoTasksList(props) {
+    if (props.tasks.length === 0) {
+        return React.createElement("p", null, "No tasks to do. Start by creating a new task.");
+    }
+    return (React.createElement(React.Fragment, null, props.tasks.map(function (task) { return (React.createElement(TodoTask, { key: task.id, task: task })); })));
+}
+exports.TodoTasksList = TodoTasksList;
+function TodoTask(props) {
+    var _a, _b;
+    return (React.createElement(react_bootstrap_1.Card, { className: "task" },
+        React.createElement(react_bootstrap_1.Card.Body, null,
+            React.createElement(react_bootstrap_1.Row, null,
+                React.createElement(react_bootstrap_1.Col, null, props.task.title),
+                React.createElement(react_bootstrap_1.Col, null, ((_a = props.task.assignee) === null || _a === void 0 ? void 0 : _a.firstName) +
+                    " " +
+                    ((_b = props.task.assignee) === null || _b === void 0 ? void 0 : _b.lastName))))));
+}
 
 
 /***/ }),
@@ -61845,6 +62189,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UsersPage = void 0;
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var users_1 = __webpack_require__(/*! ../../data/users/users */ "./src/data/users/users.ts");
 var modal_dialog_1 = __webpack_require__(/*! ../modal/modal-dialog */ "./src/view/modal/modal-dialog.tsx");
@@ -61857,10 +62202,18 @@ function UsersPage() {
     var handleCloseUserForm = function () {
         dispatch((0, users_1.closeUserForm)());
     };
-    return (React.createElement("div", null,
+    var handleCreateUserClick = function () {
+        dispatch((0, users_1.openUserForm)());
+    };
+    return (React.createElement(React.Fragment, null,
         React.createElement(modal_dialog_1.ModalDialog, { handleClose: handleCloseUserForm, show: userFormOpened, title: editedUser ? "Edit user" : "Create new user" },
             React.createElement(user_form_1.UserForm, null)),
-        React.createElement(users_list_1.UsersList, null)));
+        React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "light", bg: "light" },
+            React.createElement(react_bootstrap_1.Container, null,
+                React.createElement(react_bootstrap_1.Nav, { className: "me-auto" },
+                    React.createElement(react_bootstrap_1.Button, { variant: "success", onClick: handleCreateUserClick }, "Create User")))),
+        React.createElement(react_bootstrap_1.Container, null,
+            React.createElement(users_list_1.UsersList, null))));
 }
 exports.UsersPage = UsersPage;
 

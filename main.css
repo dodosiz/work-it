@@ -19,5 +19,13 @@
 	width: 40%;
 }
 
+/*!*********************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/view/tasks/tasks-list.css ***!
+  \*********************************************************************************/
+.task {
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	margin: 2em 0;
+}
+
 
 /*# sourceMappingURL=main.css.map*/
