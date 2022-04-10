@@ -5,6 +5,10 @@ export const DATA: AppState = {
 	notifications: {
 		message: undefined,
 	},
+	tasksState: {
+		tasks: [],
+		taskFormOpened: false,
+	},
 	usersState: {
 		userFormOpened: false,
 		userIdToEdit: undefined,
