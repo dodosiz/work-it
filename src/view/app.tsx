@@ -1,32 +1,39 @@
 import * as React from "react";
-import { Button, Container, Nav, Navbar } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { openUserForm } from "../data/users/users";
+import { Container, Nav, Navbar } from "react-bootstrap";
 import { UsersPage } from "./users/users-page";
 import { NotificationAlert } from "./notifications/notification-alert";
+import { TasksPage } from "./tasks/tasks-page";
+
+type Page = "tasks" | "users";
 
 export function App() {
-	const dispatch = useDispatch();
-	const handleCreateUserClick = () => {
-		dispatch(openUserForm());
-	};
+	const [page, setPage] = React.useState<Page>("tasks");
 	return (
 		<div>
-			<Navbar expand="lg" variant="light" bg="light">
+			<Navbar expand="lg" variant="dark" bg="dark">
 				<Container>
 					<Navbar.Brand style={{ color: "lightblue" }}>Work IT</Navbar.Brand>
+					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					<Navbar.Collapse id="basic-navbar-nav">
 						<Nav className="me-auto">
-							<Button variant="success" onClick={handleCreateUserClick}>
-								Create User
-							</Button>
+							<Nav.Link
+								active={page === "tasks"}
+								onClick={() => setPage("tasks")}
+							>
+								Tasks
+							</Nav.Link>
+							<Nav.Link
+								active={page === "users"}
+								onClick={() => setPage("users")}
+							>
+								Users
+							</Nav.Link>
 						</Nav>
 					</Navbar.Collapse>
 				</Container>
 			</Navbar>
-			<div className="container main">
-				<UsersPage />
-			</div>
+			{page === "tasks" && <TasksPage />}
+			{page === "users" && <UsersPage />}
 			<NotificationAlert />
 		</div>
 	);

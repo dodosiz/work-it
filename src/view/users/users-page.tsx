@@ -1,8 +1,10 @@
 import * as React from "react";
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	closeUserForm,
 	editedUserSelector,
+	openUserForm,
 	userFormOpenedSelector,
 } from "../../data/users/users";
 import { ModalDialog } from "../modal/modal-dialog";
@@ -16,8 +18,11 @@ export function UsersPage() {
 	const handleCloseUserForm = () => {
 		dispatch(closeUserForm());
 	};
+	const handleCreateUserClick = () => {
+		dispatch(openUserForm());
+	};
 	return (
-		<div>
+		<>
 			<ModalDialog
 				handleClose={handleCloseUserForm}
 				show={userFormOpened}
@@ -25,7 +30,18 @@ export function UsersPage() {
 			>
 				<UserForm />
 			</ModalDialog>
-			<UsersList />
-		</div>
+			<Navbar expand="lg" variant="light" bg="light">
+				<Container>
+					<Nav className="me-auto">
+						<Button variant="success" onClick={handleCreateUserClick}>
+							Create User
+						</Button>
+					</Nav>
+				</Container>
+			</Navbar>
+			<Container>
+				<UsersList />
+			</Container>
+		</>
 	);
 }
