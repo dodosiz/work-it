@@ -3,6 +3,7 @@ import { User } from "../users/users";
 import {
 	closeTaskForm,
 	createTask,
+	finishTask,
 	openTaskForm,
 	tasksReducer,
 	TasksState,
@@ -11,6 +12,8 @@ import {
 jest.mock("uuid", () => ({
 	v4: jest.fn().mockReturnValue("taskId"),
 }));
+
+jest.useFakeTimers().setSystemTime(new Date("2020-01-01"));
 
 const initialState: TasksState = {
 	tasks: [],
@@ -54,5 +57,31 @@ describe("Tasks reducer:", () => {
 			closeTaskForm()
 		);
 		expect(nextState.taskFormOpened).toBeFalsy();
+	});
+	test("finish a task", () => {
+		const nextState = tasksReducer(
+			{
+				taskFormOpened: false,
+				tasks: [
+					{
+						id: "taskId",
+						title: "Title",
+						description: "Task description",
+						assignee: mockUser,
+						dateFinished: undefined,
+					},
+				],
+			},
+			finishTask({ taskId: "taskId" })
+		);
+		expect(nextState.tasks).toEqual([
+			{
+				id: "taskId",
+				title: "Title",
+				description: "Task description",
+				assignee: mockUser,
+				dateFinished: "1/1/2020",
+			},
+		]);
 	});
 });

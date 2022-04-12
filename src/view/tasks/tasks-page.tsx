@@ -5,15 +5,13 @@ import {
 	closeTaskForm,
 	openTaskForm,
 	taskFormOpenedSelector,
-	toDoTasksSelector,
 } from "../../data/tasks/tasks";
 import { ModalDialog } from "../modal/modal-dialog";
 import { TaskForm } from "./task-form";
-import { TodoTasksList } from "./todo-tasks-list";
+import { TasksList } from "./tasks-list";
 
 export function TasksPage() {
 	const dispatch = useDispatch();
-	const tasks = useSelector(toDoTasksSelector);
 	const taskFormOpened = useSelector(taskFormOpenedSelector);
 	const handleCloseTaskForm = () => {
 		dispatch(closeTaskForm());
@@ -40,7 +38,7 @@ export function TasksPage() {
 				</Container>
 			</Navbar>
 			<Container>
-				<TodoTasksList tasks={tasks} />
+				<TasksList />
 			</Container>
 		</>
 	);

@@ -22,6 +22,10 @@ interface CreateTaskPayload {
 	assignee: User | undefined;
 }
 
+interface FinishTaskPayload {
+	taskId: string;
+}
+
 const initialState: TasksState = {
 	tasks: [],
 	taskFormOpened: false,
@@ -38,6 +42,14 @@ const tasksSlice = createSlice({
 				...action.payload,
 			});
 		},
+		finishTask: (state, action: PayloadAction<FinishTaskPayload>) => {
+			const task = state.tasks.find(
+				(task) => task.id === action.payload.taskId
+			);
+			if (task) {
+				task.dateFinished = new Date().toLocaleDateString();
+			}
+		},
 		openTaskForm: (state) => {
 			state.taskFormOpened = true;
 		},
@@ -47,7 +59,8 @@ const tasksSlice = createSlice({
 	},
 });
 
-export const { createTask, openTaskForm, closeTaskForm } = tasksSlice.actions;
+export const { createTask, openTaskForm, closeTaskForm, finishTask } =
+	tasksSlice.actions;
 export const tasksReducer = tasksSlice.reducer;
 
 export const toDoTasksSelector = (state: AppState) =>
