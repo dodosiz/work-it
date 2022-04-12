@@ -61457,7 +61457,7 @@ var __assign = (this && this.__assign) || function () {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.taskFormOpenedSelector = exports.finishedTasksSelector = exports.toDoTasksSelector = exports.tasksReducer = exports.closeTaskForm = exports.openTaskForm = exports.createTask = void 0;
+exports.taskFormOpenedSelector = exports.finishedTasksSelector = exports.tasksSelector = exports.tasksReducer = exports.finishTask = exports.closeTaskForm = exports.openTaskForm = exports.createTask = void 0;
 var toolkit_1 = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
 var uuid_1 = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/index.js");
 var initialState = {
@@ -61471,6 +61471,12 @@ var tasksSlice = (0, toolkit_1.createSlice)({
         createTask: function (state, action) {
             state.tasks.push(__assign({ id: (0, uuid_1.v4)(), dateFinished: undefined }, action.payload));
         },
+        finishTask: function (state, action) {
+            var task = state.tasks.find(function (task) { return task.id === action.payload.taskId; });
+            if (task) {
+                task.dateFinished = new Date().toLocaleDateString();
+            }
+        },
         openTaskForm: function (state) {
             state.taskFormOpened = true;
         },
@@ -61479,12 +61485,16 @@ var tasksSlice = (0, toolkit_1.createSlice)({
         },
     },
 });
-exports.createTask = (_a = tasksSlice.actions, _a.createTask), exports.openTaskForm = _a.openTaskForm, exports.closeTaskForm = _a.closeTaskForm;
+exports.createTask = (_a = tasksSlice.actions, _a.createTask), exports.openTaskForm = _a.openTaskForm, exports.closeTaskForm = _a.closeTaskForm, exports.finishTask = _a.finishTask;
 exports.tasksReducer = tasksSlice.reducer;
-var toDoTasksSelector = function (state) {
-    return state.tasksState.tasks.filter(function (task) { return task.dateFinished === undefined; });
+var tasksSelector = function (mode) {
+    return function (state) {
+        return state.tasksState.tasks.filter(function (task) {
+            return mode === "todo" ? !task.dateFinished : task.dateFinished;
+        });
+    };
 };
-exports.toDoTasksSelector = toDoTasksSelector;
+exports.tasksSelector = tasksSelector;
 var finishedTasksSelector = function (state) {
     return state.tasksState.tasks.filter(function (task) { return task.dateFinished !== undefined; });
 };
@@ -61632,7 +61642,7 @@ var users_page_1 = __webpack_require__(/*! ./users/users-page */ "./src/view/use
 var notification_alert_1 = __webpack_require__(/*! ./notifications/notification-alert */ "./src/view/notifications/notification-alert.tsx");
 var tasks_page_1 = __webpack_require__(/*! ./tasks/tasks-page */ "./src/view/tasks/tasks-page.tsx");
 function App() {
-    var _a = React.useState("tasks"), page = _a[0], setPage = _a[1];
+    var _a = React.useState("tasks-todo"), page = _a[0], setPage = _a[1];
     return (React.createElement("div", null,
         React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "dark", bg: "dark" },
             React.createElement(react_bootstrap_1.Container, null,
@@ -61640,9 +61650,11 @@ function App() {
                 React.createElement(react_bootstrap_1.Navbar.Toggle, { "aria-controls": "basic-navbar-nav" }),
                 React.createElement(react_bootstrap_1.Navbar.Collapse, { id: "basic-navbar-nav" },
                     React.createElement(react_bootstrap_1.Nav, { className: "me-auto" },
-                        React.createElement(react_bootstrap_1.Nav.Link, { active: page === "tasks", onClick: function () { return setPage("tasks"); } }, "To Do Tasks"),
+                        React.createElement(react_bootstrap_1.Nav.Link, { active: page === "tasks-todo", onClick: function () { return setPage("tasks-todo"); } }, "To Do"),
+                        React.createElement(react_bootstrap_1.Nav.Link, { active: page === "tasks-done", onClick: function () { return setPage("tasks-done"); } }, "Done"),
                         React.createElement(react_bootstrap_1.Nav.Link, { active: page === "users", onClick: function () { return setPage("users"); } }, "Roles"))))),
-        page === "tasks" && React.createElement(tasks_page_1.TasksPage, null),
+        page === "tasks-todo" && React.createElement(tasks_page_1.TasksPage, { mode: "todo" }),
+        page === "tasks-done" && React.createElement(tasks_page_1.TasksPage, { mode: "done" }),
         page === "users" && React.createElement(users_page_1.UsersPage, null),
         React.createElement(notification_alert_1.NotificationAlert, null)));
 }
@@ -61852,6 +61864,86 @@ exports.TaskForm = TaskForm;
 
 /***/ }),
 
+/***/ "./src/view/tasks/tasks-list.tsx":
+/*!***************************************!*\
+  !*** ./src/view/tasks/tasks-list.tsx ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TasksList = void 0;
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var tasks_1 = __webpack_require__(/*! ../../data/tasks/tasks */ "./src/data/tasks/tasks.ts");
+__webpack_require__(/*! ./tasks-list.css */ "./src/view/tasks/tasks-list.css");
+function TasksList(props) {
+    var tasks = (0, react_redux_1.useSelector)((0, tasks_1.tasksSelector)(props.mode));
+    if (tasks.length === 0) {
+        return (React.createElement("p", null, props.mode === "todo"
+            ? "No tasks to do. Start by creating a new task."
+            : "No tasks finished yet."));
+    }
+    return (React.createElement(React.Fragment, null, tasks.map(function (task) { return (React.createElement(TaskCard, { key: task.id, task: task, mode: props.mode })); })));
+}
+exports.TasksList = TasksList;
+function TaskCard(props) {
+    var _a, _b;
+    var fadeOutTimeout = 1500; // a little faster then the CSS transition
+    var _c = React.useState(false), checked = _c[0], setChecked = _c[1];
+    var dispatch = (0, react_redux_1.useDispatch)();
+    var handleCheck = function () {
+        setChecked(true);
+        setTimeout(function () {
+            dispatch((0, tasks_1.finishTask)({ taskId: props.task.id }));
+        }, fadeOutTimeout);
+    };
+    return (React.createElement(react_bootstrap_1.Card, { className: "task", style: checked ? { opacity: "0%" } : {} },
+        React.createElement(react_bootstrap_1.Card.Body, null,
+            React.createElement(react_bootstrap_1.Row, null,
+                React.createElement(react_bootstrap_1.Col, { md: 2 },
+                    React.createElement(CheckBox, { taskId: props.task.id, checked: props.mode === "todo" ? checked : true, handleCheck: props.mode === "todo" ? handleCheck : undefined })),
+                React.createElement(react_bootstrap_1.Col, { md: props.mode === "todo" ? 5 : 4 }, props.task.title),
+                React.createElement(react_bootstrap_1.Col, { md: props.mode === "todo" ? 5 : 4 }, ((_a = props.task.assignee) === null || _a === void 0 ? void 0 : _a.firstName) +
+                    " " +
+                    ((_b = props.task.assignee) === null || _b === void 0 ? void 0 : _b.lastName)),
+                props.mode === "done" && (React.createElement(react_bootstrap_1.Col, { md: 2 }, "Finished on: ".concat(props.task.dateFinished)))))));
+}
+function CheckBox(props) {
+    return (React.createElement("div", { className: "".concat(props.handleCheck ? "check" : "", " ").concat(props.checked ? "done" : "undone"), onClick: function () { return (props.handleCheck ? props.handleCheck() : {}); }, "data-testid": "check-".concat(props.taskId) },
+        !props.checked && React.createElement(bs_1.BsCheckCircle, { size: "1.5em" }),
+        props.checked && React.createElement(bs_1.BsCheckCircleFill, { size: "1.5em" })));
+}
+
+
+/***/ }),
+
 /***/ "./src/view/tasks/tasks-page.tsx":
 /*!***************************************!*\
   !*** ./src/view/tasks/tasks-page.tsx ***!
@@ -61891,10 +61983,9 @@ var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react
 var tasks_1 = __webpack_require__(/*! ../../data/tasks/tasks */ "./src/data/tasks/tasks.ts");
 var modal_dialog_1 = __webpack_require__(/*! ../modal/modal-dialog */ "./src/view/modal/modal-dialog.tsx");
 var task_form_1 = __webpack_require__(/*! ./task-form */ "./src/view/tasks/task-form.tsx");
-var todo_tasks_list_1 = __webpack_require__(/*! ./todo-tasks-list */ "./src/view/tasks/todo-tasks-list.tsx");
-function TasksPage() {
+var tasks_list_1 = __webpack_require__(/*! ./tasks-list */ "./src/view/tasks/tasks-list.tsx");
+function TasksPage(props) {
     var dispatch = (0, react_redux_1.useDispatch)();
-    var tasks = (0, react_redux_1.useSelector)(tasks_1.toDoTasksSelector);
     var taskFormOpened = (0, react_redux_1.useSelector)(tasks_1.taskFormOpenedSelector);
     var handleCloseTaskForm = function () {
         dispatch((0, tasks_1.closeTaskForm)());
@@ -61907,69 +61998,11 @@ function TasksPage() {
             React.createElement(task_form_1.TaskForm, null)),
         React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "light", bg: "light" },
             React.createElement(react_bootstrap_1.Container, null,
-                React.createElement(react_bootstrap_1.Nav, { className: "me-auto" },
-                    React.createElement(react_bootstrap_1.Button, { variant: "success", onClick: handleCreateTaskClick }, "Create Task")))),
+                React.createElement(react_bootstrap_1.Nav, { className: "me-auto" }, props.mode === "todo" && (React.createElement(react_bootstrap_1.Button, { variant: "success", onClick: handleCreateTaskClick }, "Create Task"))))),
         React.createElement(react_bootstrap_1.Container, null,
-            React.createElement(todo_tasks_list_1.TodoTasksList, { tasks: tasks }))));
+            React.createElement(tasks_list_1.TasksList, { mode: props.mode }))));
 }
 exports.TasksPage = TasksPage;
-
-
-/***/ }),
-
-/***/ "./src/view/tasks/todo-tasks-list.tsx":
-/*!********************************************!*\
-  !*** ./src/view/tasks/todo-tasks-list.tsx ***!
-  \********************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TodoTasksList = void 0;
-var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-__webpack_require__(/*! ./tasks-list.css */ "./src/view/tasks/tasks-list.css");
-function TodoTasksList(props) {
-    if (props.tasks.length === 0) {
-        return React.createElement("p", null, "No tasks to do. Start by creating a new task.");
-    }
-    return (React.createElement(React.Fragment, null, props.tasks.map(function (task) { return (React.createElement(TodoTask, { key: task.id, task: task })); })));
-}
-exports.TodoTasksList = TodoTasksList;
-function TodoTask(props) {
-    var _a, _b;
-    return (React.createElement(react_bootstrap_1.Card, { className: "task" },
-        React.createElement(react_bootstrap_1.Card.Body, null,
-            React.createElement(react_bootstrap_1.Row, null,
-                React.createElement(react_bootstrap_1.Col, null, props.task.title),
-                React.createElement(react_bootstrap_1.Col, null, ((_a = props.task.assignee) === null || _a === void 0 ? void 0 : _a.firstName) +
-                    " " +
-                    ((_b = props.task.assignee) === null || _b === void 0 ? void 0 : _b.lastName))))));
-}
 
 
 /***/ }),
