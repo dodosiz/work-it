@@ -63,8 +63,12 @@ export const { createTask, openTaskForm, closeTaskForm, finishTask } =
 	tasksSlice.actions;
 export const tasksReducer = tasksSlice.reducer;
 
-export const toDoTasksSelector = (state: AppState) =>
-	state.tasksState.tasks.filter((task) => task.dateFinished === undefined);
+export const tasksSelector = (mode: "todo" | "done") => {
+	return (state: AppState) =>
+		state.tasksState.tasks.filter((task) =>
+			mode === "todo" ? !task.dateFinished : task.dateFinished
+		);
+};
 export const finishedTasksSelector = (state: AppState) =>
 	state.tasksState.tasks.filter((task) => task.dateFinished !== undefined);
 export const taskFormOpenedSelector = (state: AppState) =>

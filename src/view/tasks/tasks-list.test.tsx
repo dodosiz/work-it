@@ -47,6 +47,19 @@ describe("Tasks list:", () => {
 							dateFinished: undefined,
 							description: "",
 						},
+						{
+							id: "task3",
+							assignee: {
+								id: "user1",
+								firstName: "Alejandro",
+								lastName: "Matthews",
+								role: "Project manager",
+							},
+							title:
+								"Meet with the stakeholders to discuss the new requirements.",
+							dateFinished: "2020-01-01",
+							description: "",
+						},
 					],
 				},
 				usersState: {
@@ -64,18 +77,30 @@ describe("Tasks list:", () => {
 			},
 		});
 	});
-	test("Snapshot test", () => {
-		const component = render(
-			<Provider store={store}>
-				<TasksList />
-			</Provider>
-		);
-		expect(component.container).toMatchSnapshot();
-	});
-	test("Check tasks", async () => {
+	test("todo list", () => {
 		render(
 			<Provider store={store}>
-				<TasksList />
+				<TasksList mode={"todo"} />
+			</Provider>
+		);
+		expect(screen.queryAllByTestId("check-task1").length).toBe(1);
+		expect(screen.queryAllByTestId("check-task2").length).toBe(1);
+		expect(screen.queryAllByTestId("check-task3").length).toBe(0);
+	});
+	test("done list", () => {
+		render(
+			<Provider store={store}>
+				<TasksList mode={"done"} />
+			</Provider>
+		);
+		expect(screen.queryAllByTestId("check-task1").length).toBe(0);
+		expect(screen.queryAllByTestId("check-task2").length).toBe(0);
+		expect(screen.queryAllByTestId("check-task3").length).toBe(1);
+	});
+	test("check tasks", async () => {
+		render(
+			<Provider store={store}>
+				<TasksList mode={"todo"} />
 			</Provider>
 		);
 		expect(screen.queryAllByTestId("check-task1").length).toBe(1);

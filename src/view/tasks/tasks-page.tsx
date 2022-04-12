@@ -10,7 +10,7 @@ import { ModalDialog } from "../modal/modal-dialog";
 import { TaskForm } from "./task-form";
 import { TasksList } from "./tasks-list";
 
-export function TasksPage() {
+export function TasksPage(props: { mode: "todo" | "done" }) {
 	const dispatch = useDispatch();
 	const taskFormOpened = useSelector(taskFormOpenedSelector);
 	const handleCloseTaskForm = () => {
@@ -31,14 +31,16 @@ export function TasksPage() {
 			<Navbar expand="lg" variant="light" bg="light">
 				<Container>
 					<Nav className="me-auto">
-						<Button variant="success" onClick={handleCreateTaskClick}>
-							Create Task
-						</Button>
+						{props.mode === "todo" && (
+							<Button variant="success" onClick={handleCreateTaskClick}>
+								Create Task
+							</Button>
+						)}
 					</Nav>
 				</Container>
 			</Navbar>
 			<Container>
-				<TasksList />
+				<TasksList mode={props.mode} />
 			</Container>
 		</>
 	);

@@ -4,10 +4,10 @@ import { UsersPage } from "./users/users-page";
 import { NotificationAlert } from "./notifications/notification-alert";
 import { TasksPage } from "./tasks/tasks-page";
 
-type Page = "tasks" | "users";
+type Page = "tasks-todo" | "tasks-done" | "users";
 
 export function App() {
-	const [page, setPage] = React.useState<Page>("tasks");
+	const [page, setPage] = React.useState<Page>("tasks-todo");
 	return (
 		<div>
 			<Navbar expand="lg" variant="dark" bg="dark">
@@ -17,10 +17,16 @@ export function App() {
 					<Navbar.Collapse id="basic-navbar-nav">
 						<Nav className="me-auto">
 							<Nav.Link
-								active={page === "tasks"}
-								onClick={() => setPage("tasks")}
+								active={page === "tasks-todo"}
+								onClick={() => setPage("tasks-todo")}
 							>
-								To Do Tasks
+								To Do
+							</Nav.Link>
+							<Nav.Link
+								active={page === "tasks-done"}
+								onClick={() => setPage("tasks-done")}
+							>
+								Done
 							</Nav.Link>
 							<Nav.Link
 								active={page === "users"}
@@ -32,7 +38,8 @@ export function App() {
 					</Navbar.Collapse>
 				</Container>
 			</Navbar>
-			{page === "tasks" && <TasksPage />}
+			{page === "tasks-todo" && <TasksPage mode="todo" />}
+			{page === "tasks-done" && <TasksPage mode="done" />}
 			{page === "users" && <UsersPage />}
 			<NotificationAlert />
 		</div>
