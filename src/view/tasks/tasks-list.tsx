@@ -18,11 +18,19 @@ export function TasksList(props: { mode: "todo" | "done" }) {
 	}
 	return (
 		<>
-			{tasks.map((task) => (
+			{tasks.sort(sortByDate).map((task) => (
 				<TaskCard key={task.id} task={task} mode={props.mode} />
 			))}
 		</>
 	);
+}
+
+function sortByDate(task1: Task, task2: Task) {
+	if (task1.dateFinished && task2.dateFinished) {
+		return task2.dateFinished.localeCompare(task1.dateFinished);
+	} else {
+		return 0;
+	}
 }
 
 interface TaskCardProps {
@@ -75,13 +83,17 @@ interface CheckBoxProps {
 function CheckBox(props: CheckBoxProps) {
 	return (
 		<div
-			className={`${props.handleCheck ? "check" : ""} ${
-				props.checked ? "done" : "undone"
-			}`}
-			onClick={() => (props.handleCheck ? props.handleCheck() : {})}
+			className={`${props.checked ? "done" : "undone"}`}
 			data-testid={`check-${props.taskId}`}
 		>
-			{!props.checked && <BsCheckCircle size={"1.5em"} />}
+			{!props.checked && (
+				<BsCheckCircle
+					className="check"
+					onClick={props.handleCheck}
+					size={"1.5em"}
+					data-testid={`check-box-${props.taskId}`}
+				/>
+			)}
 			{props.checked && <BsCheckCircleFill size={"1.5em"} />}
 		</div>
 	);

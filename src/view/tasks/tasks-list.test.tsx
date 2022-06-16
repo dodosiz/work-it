@@ -50,14 +50,25 @@ describe("Tasks list:", () => {
 						{
 							id: "task3",
 							assignee: {
-								id: "user1",
-								firstName: "Alejandro",
-								lastName: "Matthews",
-								role: "Project manager",
+								id: "user2",
+								firstName: "John",
+								lastName: "Doe",
+								role: "Developer",
 							},
-							title:
-								"Meet with the stakeholders to discuss the new requirements.",
+							title: "Fix the production bugs",
 							dateFinished: "2020-01-01",
+							description: "",
+						},
+						{
+							id: "task4",
+							assignee: {
+								id: "user2",
+								firstName: "John",
+								lastName: "Doe",
+								role: "Developer",
+							},
+							title: "Develop the landing page.",
+							dateFinished: "2020-02-13",
 							description: "",
 						},
 					],
@@ -71,6 +82,12 @@ describe("Tasks list:", () => {
 							firstName: "Alejandro",
 							lastName: "Matthews",
 							role: "Project manager",
+						},
+						{
+							id: "user2",
+							firstName: "John",
+							lastName: "Doe",
+							role: "Developer",
 						},
 					],
 				},
@@ -86,16 +103,16 @@ describe("Tasks list:", () => {
 		expect(screen.queryAllByTestId("check-task1").length).toBe(1);
 		expect(screen.queryAllByTestId("check-task2").length).toBe(1);
 		expect(screen.queryAllByTestId("check-task3").length).toBe(0);
+		expect(screen.queryAllByTestId("check-task4").length).toBe(0);
 	});
 	test("done list", () => {
-		render(
+		const doneList = render(
 			<Provider store={store}>
 				<TasksList mode={"done"} />
 			</Provider>
 		);
-		expect(screen.queryAllByTestId("check-task1").length).toBe(0);
-		expect(screen.queryAllByTestId("check-task2").length).toBe(0);
-		expect(screen.queryAllByTestId("check-task3").length).toBe(1);
+		// in the snapshot we can see the tasks are ordered by date
+		expect(doneList.container).toMatchSnapshot();
 	});
 	test("check tasks", async () => {
 		render(
@@ -105,7 +122,7 @@ describe("Tasks list:", () => {
 		);
 		expect(screen.queryAllByTestId("check-task1").length).toBe(1);
 		expect(screen.queryAllByTestId("check-task2").length).toBe(1);
-		userEvent.click(screen.getByTestId("check-task1"));
+		userEvent.click(screen.getByTestId("check-box-task1"));
 		await new Promise((r) => setTimeout(r, 2000));
 		expect(screen.queryAllByTestId("check-task1").length).toBe(0);
 		expect(screen.queryAllByTestId("check-task2").length).toBe(1);

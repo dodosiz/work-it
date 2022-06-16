@@ -80,7 +80,7 @@ describe("Tasks reducer:", () => {
 				title: "Title",
 				description: "Task description",
 				assignee: mockUser,
-				dateFinished: "1/1/2020",
+				dateFinished: new Date("2020-01-01").toLocaleDateString(),
 			},
 		]);
 	});
