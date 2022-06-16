@@ -10,9 +10,7 @@ export function TasksList(props: { mode: "todo" | "done" }) {
 	if (tasks.length === 0) {
 		return (
 			<p>
-				{props.mode === "todo"
-					? "No tasks to do. Start by creating a new task."
-					: "No tasks finished yet."}
+				{props.mode === "todo" ? "No tasks found." : "No finished tasks found."}
 			</p>
 		);
 	}

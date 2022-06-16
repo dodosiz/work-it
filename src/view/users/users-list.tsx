@@ -69,14 +69,14 @@ function User(props: UserProps) {
 			<td>
 				<Button
 					data-testid={`edit-button-${props.index}`}
-					variant="primary"
+					variant="outline-primary"
 					onClick={() => props.handleEdit(props.user.id)}
 				>
 					<BsPencilFill />
 				</Button>{" "}
 				<Button
 					data-testid={`delete-button-${props.index}`}
-					variant="danger"
+					variant="outline-danger"
 					onClick={() => props.handleDelete(props.user)}
 				>
 					<BsFillTrashFill />

@@ -6,6 +6,7 @@ import {
 	openTaskForm,
 	taskFormOpenedSelector,
 } from "../../data/tasks/tasks";
+import { TaskFilter } from "../filter/task-filter";
 import { ModalDialog } from "../modal/modal-dialog";
 import { TaskForm } from "./task-form";
 import { TasksList } from "./tasks-list";
@@ -37,6 +38,7 @@ export function TasksPage(props: { mode: "todo" | "done" }) {
 							</Button>
 						)}
 					</Nav>
+					<TaskFilter />
 				</Container>
 			</Navbar>
 			<Container>

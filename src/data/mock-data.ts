@@ -135,4 +135,5 @@ export const DATA: AppState = {
 			},
 		],
 	},
+	filterState: {},
 };

@@ -64,10 +64,27 @@ export const { createTask, openTaskForm, closeTaskForm, finishTask } =
 export const tasksReducer = tasksSlice.reducer;
 
 export const tasksSelector = (mode: "todo" | "done") => {
-	return (state: AppState) =>
-		state.tasksState.tasks.filter((task) =>
+	return (state: AppState) => {
+		const tasksByMode = state.tasksState.tasks.filter((task) =>
 			mode === "todo" ? !task.dateFinished : task.dateFinished
 		);
+		const appliedFilter = state.filterState.appliedFilter;
+		if (appliedFilter) {
+			return tasksByMode.filter((task) => {
+				const taskTitle = task.title.toLowerCase();
+				const descriptionMatches =
+					appliedFilter.taskTitle && appliedFilter.taskTitle !== ""
+						? taskTitle.includes(appliedFilter.taskTitle.toLowerCase())
+						: true;
+				const assigneeMatches = appliedFilter.userId
+					? task.assignee?.id === appliedFilter.userId
+					: true;
+				return descriptionMatches && assigneeMatches;
+			});
+		} else {
+			return tasksByMode;
+		}
+	};
 };
 export const finishedTasksSelector = (state: AppState) =>
 	state.tasksState.tasks.filter((task) => task.dateFinished !== undefined);

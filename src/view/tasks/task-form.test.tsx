@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import { TaskForm } from "./task-form";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { filterReducer } from "../../data/filter/filter";
 
 jest.mock("uuid", () => ({
 	v4: jest.fn().mockReturnValue("taskId"),
@@ -41,6 +42,7 @@ const preloadedState: AppState = {
 		userFormOpened: true,
 		userIdToEdit: undefined,
 	},
+	filterState: {},
 };
 
 describe("Task form component:", () => {
@@ -50,6 +52,7 @@ describe("Task form component:", () => {
 				usersState: usersReducer,
 				tasksState: tasksReducer,
 				notifications: notificationsReducer,
+				filterState: filterReducer,
 			},
 			preloadedState,
 		});

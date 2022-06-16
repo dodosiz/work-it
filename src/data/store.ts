@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { filterReducer, FilterState } from "./filter/filter";
 import { DATA } from "./mock-data";
 import {
 	notificationsReducer,
@@ -11,6 +12,7 @@ export interface AppState {
 	usersState: UsersState;
 	notifications: NotificationsState;
 	tasksState: TasksState;
+	filterState: FilterState;
 }
 
 export const store = configureStore({
@@ -18,6 +20,7 @@ export const store = configureStore({
 		usersState: usersReducer,
 		tasksState: tasksReducer,
 		notifications: notificationsReducer,
+		filterState: filterReducer,
 	},
 	preloadedState: DATA,
 });

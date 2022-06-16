@@ -71,7 +71,7 @@ export function TaskForm() {
 					value={userId}
 					data-testid="assignee"
 				>
-					<option>Assignee</option>
+					<option></option>
 					{users.map((user) => (
 						<option key={user.id} value={user.id}>
 							{user.firstName + " " + user.lastName}

@@ -40,7 +40,7 @@ exports[`Users list component: snapshot test 1`] = `
         </td>
         <td>
           <button
-            class="btn btn-primary"
+            class="btn btn-outline-primary"
             data-testid="edit-button-0"
             type="button"
           >
@@ -60,7 +60,7 @@ exports[`Users list component: snapshot test 1`] = `
           </button>
            
           <button
-            class="btn btn-danger"
+            class="btn btn-outline-danger"
             data-testid="delete-button-0"
             type="button"
           >
@@ -95,7 +95,7 @@ exports[`Users list component: snapshot test 1`] = `
         </td>
         <td>
           <button
-            class="btn btn-primary"
+            class="btn btn-outline-primary"
             data-testid="edit-button-1"
             type="button"
           >
@@ -115,7 +115,7 @@ exports[`Users list component: snapshot test 1`] = `
           </button>
            
           <button
-            class="btn btn-danger"
+            class="btn btn-outline-danger"
             data-testid="delete-button-1"
             type="button"
           >
