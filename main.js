@@ -61222,6 +61222,37 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./src/data/filter/filter.ts":
+/*!***********************************!*\
+  !*** ./src/data/filter/filter.ts ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.filterReducer = exports.removeFilter = exports.setFilter = void 0;
+var toolkit_1 = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
+var initialState = {};
+var filterSlice = (0, toolkit_1.createSlice)({
+    name: "filter",
+    initialState: initialState,
+    reducers: {
+        setFilter: function (state, action) {
+            state.appliedFilter = action.payload;
+        },
+        removeFilter: function (state) {
+            state.appliedFilter = undefined;
+        },
+    },
+});
+exports.setFilter = (_a = filterSlice.actions, _a.setFilter), exports.removeFilter = _a.removeFilter;
+exports.filterReducer = filterSlice.reducer;
+
+
+/***/ }),
+
 /***/ "./src/data/mock-data.ts":
 /*!*******************************!*\
   !*** ./src/data/mock-data.ts ***!
@@ -61367,6 +61398,7 @@ exports.DATA = {
             },
         ],
     },
+    filterState: {},
 };
 
 
@@ -61420,6 +61452,7 @@ exports.notificationSelector = notificationSelector;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.store = void 0;
 var toolkit_1 = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
+var filter_1 = __webpack_require__(/*! ./filter/filter */ "./src/data/filter/filter.ts");
 var mock_data_1 = __webpack_require__(/*! ./mock-data */ "./src/data/mock-data.ts");
 var notifications_1 = __webpack_require__(/*! ./notifications/notifications */ "./src/data/notifications/notifications.ts");
 var tasks_1 = __webpack_require__(/*! ./tasks/tasks */ "./src/data/tasks/tasks.ts");
@@ -61429,6 +61462,7 @@ exports.store = (0, toolkit_1.configureStore)({
         usersState: users_1.usersReducer,
         tasksState: tasks_1.tasksReducer,
         notifications: notifications_1.notificationsReducer,
+        filterState: filter_1.filterReducer,
     },
     preloadedState: mock_data_1.DATA,
 });
@@ -61489,9 +61523,26 @@ exports.createTask = (_a = tasksSlice.actions, _a.createTask), exports.openTaskF
 exports.tasksReducer = tasksSlice.reducer;
 var tasksSelector = function (mode) {
     return function (state) {
-        return state.tasksState.tasks.filter(function (task) {
+        var tasksByMode = state.tasksState.tasks.filter(function (task) {
             return mode === "todo" ? !task.dateFinished : task.dateFinished;
         });
+        var appliedFilter = state.filterState.appliedFilter;
+        if (appliedFilter) {
+            return tasksByMode.filter(function (task) {
+                var _a;
+                var taskTitle = task.title.toLowerCase();
+                var descriptionMatches = appliedFilter.taskTitle && appliedFilter.taskTitle !== ""
+                    ? taskTitle.includes(appliedFilter.taskTitle.toLowerCase())
+                    : true;
+                var assigneeMatches = appliedFilter.userId
+                    ? ((_a = task.assignee) === null || _a === void 0 ? void 0 : _a.id) === appliedFilter.userId
+                    : true;
+                return descriptionMatches && assigneeMatches;
+            });
+        }
+        else {
+            return tasksByMode;
+        }
     };
 };
 exports.tasksSelector = tasksSelector;
@@ -61659,6 +61710,88 @@ function App() {
         React.createElement(notification_alert_1.NotificationAlert, null)));
 }
 exports.App = App;
+
+
+/***/ }),
+
+/***/ "./src/view/filter/task-filter.tsx":
+/*!*****************************************!*\
+  !*** ./src/view/filter/task-filter.tsx ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TaskFilter = void 0;
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var filter_1 = __webpack_require__(/*! ../../data/filter/filter */ "./src/data/filter/filter.ts");
+var users_1 = __webpack_require__(/*! ../../data/users/users */ "./src/data/users/users.ts");
+function TaskFilter() {
+    var dispatch = (0, react_redux_1.useDispatch)();
+    var users = (0, react_redux_1.useSelector)(users_1.usersSelector);
+    var _a = React.useState(""), title = _a[0], setTitle = _a[1];
+    var _b = React.useState(undefined), userId = _b[0], setUserId = _b[1];
+    var _c = React.useState(false), dirty = _c[0], setDirty = _c[1];
+    var handleAssigneeChange = function (event) {
+        setUserId(event.target.value);
+        setDirty(true);
+        if (!event.target.value && title === "") {
+            dispatch((0, filter_1.removeFilter)());
+        }
+    };
+    var handleTitleChange = function (event) {
+        setTitle(event.target.value);
+        setDirty(true);
+        if (event.target.value === "" && !userId) {
+            dispatch((0, filter_1.removeFilter)());
+        }
+    };
+    var handleFormSubmit = function (event) {
+        event.preventDefault();
+        handleSubmit();
+    };
+    var handleSubmit = function () {
+        dispatch((0, filter_1.setFilter)({
+            taskTitle: title,
+            userId: userId,
+        }));
+        setDirty(false);
+    };
+    var isEmpty = !userId && title === "";
+    return (React.createElement(react_bootstrap_1.Form, { className: "d-flex", onSubmit: handleFormSubmit },
+        React.createElement(react_bootstrap_1.FormControl, { type: "search", placeholder: "Task title", className: "me-2", "aria-label": "Search", value: title, "data-testid": "title-search", onChange: handleTitleChange }),
+        React.createElement(react_bootstrap_1.Form.Select, { "aria-label": "Assignee", onChange: handleAssigneeChange, value: userId, className: "me-2", "data-testid": "assignee-search" },
+            React.createElement("option", null),
+            users.map(function (user) { return (React.createElement("option", { key: user.id, value: user.id }, user.firstName + " " + user.lastName)); })),
+        React.createElement(react_bootstrap_1.Button, { onClick: handleSubmit, disabled: isEmpty || !dirty, variant: "success" }, "Search")));
+}
+exports.TaskFilter = TaskFilter;
 
 
 /***/ }),
@@ -61853,7 +61986,7 @@ function TaskForm() {
             React.createElement(react_bootstrap_1.Form.Control, { type: "textarea", value: description, onChange: handleDescriptionChange })),
         React.createElement(react_bootstrap_1.Form.Group, { className: "mb-3", controlId: "assignee" },
             React.createElement(react_bootstrap_1.Form.Select, { "aria-label": "Assignee", onChange: handleAssigneeChange, value: userId, "data-testid": "assignee" },
-                React.createElement("option", null, "Assignee"),
+                React.createElement("option", null),
                 users.map(function (user) { return (React.createElement("option", { key: user.id, value: user.id }, user.firstName + " " + user.lastName)); }))),
         React.createElement(react_bootstrap_1.Button, { disabled: submitDisabled(), variant: "primary", type: "submit" }, "Save"),
         " ",
@@ -61906,9 +62039,7 @@ __webpack_require__(/*! ./tasks-list.css */ "./src/view/tasks/tasks-list.css");
 function TasksList(props) {
     var tasks = (0, react_redux_1.useSelector)((0, tasks_1.tasksSelector)(props.mode));
     if (tasks.length === 0) {
-        return (React.createElement("p", null, props.mode === "todo"
-            ? "No tasks to do. Start by creating a new task."
-            : "No tasks finished yet."));
+        return (React.createElement("p", null, props.mode === "todo" ? "No tasks found." : "No finished tasks found."));
     }
     return (React.createElement(React.Fragment, null, tasks.sort(sortByDate).map(function (task) { return (React.createElement(TaskCard, { key: task.id, task: task, mode: props.mode })); })));
 }
@@ -61989,6 +62120,7 @@ var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/
 var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var tasks_1 = __webpack_require__(/*! ../../data/tasks/tasks */ "./src/data/tasks/tasks.ts");
+var task_filter_1 = __webpack_require__(/*! ../filter/task-filter */ "./src/view/filter/task-filter.tsx");
 var modal_dialog_1 = __webpack_require__(/*! ../modal/modal-dialog */ "./src/view/modal/modal-dialog.tsx");
 var task_form_1 = __webpack_require__(/*! ./task-form */ "./src/view/tasks/task-form.tsx");
 var tasks_list_1 = __webpack_require__(/*! ./tasks-list */ "./src/view/tasks/tasks-list.tsx");
@@ -62006,7 +62138,8 @@ function TasksPage(props) {
             React.createElement(task_form_1.TaskForm, null)),
         React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "light", bg: "light" },
             React.createElement(react_bootstrap_1.Container, null,
-                React.createElement(react_bootstrap_1.Nav, { className: "me-auto" }, props.mode === "todo" && (React.createElement(react_bootstrap_1.Button, { variant: "success", onClick: handleCreateTaskClick }, "Create Task"))))),
+                React.createElement(react_bootstrap_1.Nav, { className: "me-auto" }, props.mode === "todo" && (React.createElement(react_bootstrap_1.Button, { variant: "success", onClick: handleCreateTaskClick }, "Create Task"))),
+                React.createElement(task_filter_1.TaskFilter, null))),
         React.createElement(react_bootstrap_1.Container, null,
             React.createElement(tasks_list_1.TasksList, { mode: props.mode }))));
 }
@@ -62186,10 +62319,10 @@ function User(props) {
         React.createElement("td", null, props.user.lastName),
         React.createElement("td", null, props.user.role),
         React.createElement("td", null,
-            React.createElement(react_bootstrap_1.Button, { "data-testid": "edit-button-".concat(props.index), variant: "primary", onClick: function () { return props.handleEdit(props.user.id); } },
+            React.createElement(react_bootstrap_1.Button, { "data-testid": "edit-button-".concat(props.index), variant: "outline-primary", onClick: function () { return props.handleEdit(props.user.id); } },
                 React.createElement(bs_1.BsPencilFill, null)),
             " ",
-            React.createElement(react_bootstrap_1.Button, { "data-testid": "delete-button-".concat(props.index), variant: "danger", onClick: function () { return props.handleDelete(props.user); } },
+            React.createElement(react_bootstrap_1.Button, { "data-testid": "delete-button-".concat(props.index), variant: "outline-danger", onClick: function () { return props.handleDelete(props.user); } },
                 React.createElement(bs_1.BsFillTrashFill, null)))));
 }
 
