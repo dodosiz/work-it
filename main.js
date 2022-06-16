@@ -61910,9 +61910,17 @@ function TasksList(props) {
             ? "No tasks to do. Start by creating a new task."
             : "No tasks finished yet."));
     }
-    return (React.createElement(React.Fragment, null, tasks.map(function (task) { return (React.createElement(TaskCard, { key: task.id, task: task, mode: props.mode })); })));
+    return (React.createElement(React.Fragment, null, tasks.sort(sortByDate).map(function (task) { return (React.createElement(TaskCard, { key: task.id, task: task, mode: props.mode })); })));
 }
 exports.TasksList = TasksList;
+function sortByDate(task1, task2) {
+    if (task1.dateFinished && task2.dateFinished) {
+        return task2.dateFinished.localeCompare(task1.dateFinished);
+    }
+    else {
+        return 0;
+    }
+}
 function TaskCard(props) {
     var _a, _b;
     var fadeOutTimeout = 1500; // a little faster then the CSS transition
@@ -61936,8 +61944,8 @@ function TaskCard(props) {
                 props.mode === "done" && (React.createElement(react_bootstrap_1.Col, { md: 2 }, "Finished on: ".concat(props.task.dateFinished)))))));
 }
 function CheckBox(props) {
-    return (React.createElement("div", { className: "".concat(props.handleCheck ? "check" : "", " ").concat(props.checked ? "done" : "undone"), onClick: function () { return (props.handleCheck ? props.handleCheck() : {}); }, "data-testid": "check-".concat(props.taskId) },
-        !props.checked && React.createElement(bs_1.BsCheckCircle, { size: "1.5em" }),
+    return (React.createElement("div", { className: "".concat(props.checked ? "done" : "undone"), "data-testid": "check-".concat(props.taskId) },
+        !props.checked && (React.createElement(bs_1.BsCheckCircle, { className: "check", onClick: props.handleCheck, size: "1.5em", "data-testid": "check-box-".concat(props.taskId) })),
         props.checked && React.createElement(bs_1.BsCheckCircleFill, { size: "1.5em" })));
 }
 
