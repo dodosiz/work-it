@@ -26,6 +26,10 @@ interface FinishTaskPayload {
 	taskId: string;
 }
 
+interface DeleteTaskPayload {
+	taskId: string;
+}
+
 const initialState: TasksState = {
 	tasks: [],
 	taskFormOpened: false,
@@ -56,11 +60,22 @@ const tasksSlice = createSlice({
 		closeTaskForm: (state) => {
 			state.taskFormOpened = false;
 		},
+		deleteTask: (state, action: PayloadAction<DeleteTaskPayload>) => {
+			const index = state.tasks.findIndex(
+				(task) => task.id === action.payload.taskId
+			);
+			state.tasks.splice(index, 1);
+		},
 	},
 });
 
-export const { createTask, openTaskForm, closeTaskForm, finishTask } =
-	tasksSlice.actions;
+export const {
+	createTask,
+	openTaskForm,
+	closeTaskForm,
+	finishTask,
+	deleteTask,
+} = tasksSlice.actions;
 export const tasksReducer = tasksSlice.reducer;
 
 export const tasksSelector = (mode: "todo" | "done") => {

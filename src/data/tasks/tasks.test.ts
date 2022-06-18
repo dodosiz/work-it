@@ -3,6 +3,7 @@ import { User } from "../users/users";
 import {
 	closeTaskForm,
 	createTask,
+	deleteTask,
 	finishTask,
 	openTaskForm,
 	tasksReducer,
@@ -83,5 +84,23 @@ describe("Tasks reducer:", () => {
 				dateFinished: new Date("2020-01-01").toLocaleDateString(),
 			},
 		]);
+	});
+	test("delete a task", () => {
+		const nextState = tasksReducer(
+			{
+				taskFormOpened: false,
+				tasks: [
+					{
+						id: "taskId",
+						title: "Title",
+						description: "Task description",
+						assignee: mockUser,
+						dateFinished: undefined,
+					},
+				],
+			},
+			deleteTask({ taskId: "taskId" })
+		);
+		expect(nextState.tasks).toEqual([]);
 	});
 });

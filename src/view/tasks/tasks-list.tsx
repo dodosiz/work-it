@@ -1,8 +1,18 @@
 import * as React from "react";
-import { Card, Col, Row } from "react-bootstrap";
-import { BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
+import { Button, Card, Col, Row } from "react-bootstrap";
+import {
+	BsCheckCircle,
+	BsCheckCircleFill,
+	BsFillTrashFill,
+} from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { finishTask, Task, tasksSelector } from "../../data/tasks/tasks";
+import { addNotification } from "../../data/notifications/notifications";
+import {
+	deleteTask,
+	finishTask,
+	Task,
+	tasksSelector,
+} from "../../data/tasks/tasks";
 import "./tasks-list.css";
 
 export function TasksList(props: { mode: "todo" | "done" }) {
@@ -46,11 +56,19 @@ function TaskCard(props: TaskCardProps) {
 			dispatch(finishTask({ taskId: props.task.id }));
 		}, fadeOutTimeout);
 	};
+	const handleDelete = () => {
+		dispatch(deleteTask({ taskId: props.task.id }));
+		dispatch(
+			addNotification({
+				message: `Deleted task "${props.task.title}".`,
+			})
+		);
+	};
 	return (
 		<Card className="task" style={checked ? { opacity: "0%" } : {}}>
 			<Card.Body>
 				<Row>
-					<Col md={2}>
+					<Col md={1}>
 						<CheckBox
 							taskId={props.task.id}
 							checked={props.mode === "todo" ? checked : true}
@@ -58,7 +76,7 @@ function TaskCard(props: TaskCardProps) {
 						/>
 					</Col>
 					<Col md={props.mode === "todo" ? 5 : 4}>{props.task.title}</Col>
-					<Col md={props.mode === "todo" ? 5 : 4}>
+					<Col md={props.mode === "todo" ? 4 : 3}>
 						{props.task.assignee?.firstName +
 							" " +
 							props.task.assignee?.lastName}
@@ -66,6 +84,15 @@ function TaskCard(props: TaskCardProps) {
 					{props.mode === "done" && (
 						<Col md={2}>{`Finished on: ${props.task.dateFinished}`}</Col>
 					)}
+					<Col md={2}>
+						<Button
+							data-testid={`delete-button-${props.task.id}`}
+							variant="outline-danger"
+							onClick={handleDelete}
+						>
+							<BsFillTrashFill />
+						</Button>
+					</Col>
 				</Row>
 			</Card.Body>
 		</Card>

@@ -177,4 +177,18 @@ describe("Tasks list:", () => {
 		expect(screen.queryAllByTestId("check-task3").length).toBe(0);
 		expect(screen.queryAllByTestId("check-task4").length).toBe(0);
 	});
+	test("delete a task", () => {
+		render(
+			<Provider store={store}>
+				<TasksList mode={"todo"} />
+			</Provider>
+		);
+		// before the delete
+		expect(screen.queryAllByTestId("check-task1").length).toBe(1);
+		expect(screen.queryAllByTestId("check-task2").length).toBe(1);
+		userEvent.click(screen.getByTestId("delete-button-task2"));
+		// after the delete
+		expect(screen.queryAllByTestId("check-task1").length).toBe(1);
+		expect(screen.queryAllByTestId("check-task2").length).toBe(0);
+	});
 });
