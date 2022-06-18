@@ -19,6 +19,7 @@ jest.useFakeTimers().setSystemTime(new Date("2020-01-01"));
 const initialState: TasksState = {
 	tasks: [],
 	taskFormOpened: false,
+	taskFormMode: "readonly",
 };
 
 const mockUser: User = {
@@ -49,15 +50,31 @@ describe("Tasks reducer:", () => {
 		]);
 	});
 	test("open the task form", () => {
-		const nextState = tasksReducer(initialState, openTaskForm());
+		const nextState = tasksReducer(
+			initialState,
+			openTaskForm({ taskFormMode: "edit" })
+		);
 		expect(nextState.taskFormOpened).toBeTruthy();
+		expect(nextState.taskFormMode).toBe("edit");
 	});
 	test("close the task form", () => {
 		const nextState = tasksReducer(
-			{ ...initialState, taskFormOpened: true },
+			{
+				...initialState,
+				taskFormOpened: true,
+				clickedTask: {
+					id: "taskId",
+					title: "Title",
+					description: "Task description",
+					assignee: mockUser,
+					dateFinished: undefined,
+				},
+			},
 			closeTaskForm()
 		);
 		expect(nextState.taskFormOpened).toBeFalsy();
+		expect(nextState.taskFormMode).toBe("readonly");
+		expect(nextState.clickedTask).toBeUndefined();
 	});
 	test("finish a task", () => {
 		const nextState = tasksReducer(
@@ -72,6 +89,7 @@ describe("Tasks reducer:", () => {
 						dateFinished: undefined,
 					},
 				],
+				taskFormMode: "readonly",
 			},
 			finishTask({ taskId: "taskId" })
 		);
@@ -98,6 +116,7 @@ describe("Tasks reducer:", () => {
 						dateFinished: undefined,
 					},
 				],
+				taskFormMode: "readonly",
 			},
 			deleteTask({ taskId: "taskId" })
 		);

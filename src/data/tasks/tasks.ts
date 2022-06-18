@@ -6,6 +6,8 @@ import { User } from "../users/users";
 export interface TasksState {
 	tasks: Task[];
 	taskFormOpened: boolean;
+	taskFormMode: "readonly" | "edit";
+	clickedTask?: Task;
 }
 
 export interface Task {
@@ -30,9 +32,15 @@ interface DeleteTaskPayload {
 	taskId: string;
 }
 
+interface OpenTaskFormPayload {
+	taskFormMode: "readonly" | "edit";
+	clickedTask?: Task;
+}
+
 const initialState: TasksState = {
 	tasks: [],
 	taskFormOpened: false,
+	taskFormMode: "readonly",
 };
 
 const tasksSlice = createSlice({
@@ -54,11 +62,15 @@ const tasksSlice = createSlice({
 				task.dateFinished = new Date().toLocaleDateString();
 			}
 		},
-		openTaskForm: (state) => {
+		openTaskForm: (state, action: PayloadAction<OpenTaskFormPayload>) => {
 			state.taskFormOpened = true;
+			state.taskFormMode = action.payload.taskFormMode;
+			state.clickedTask = action.payload.clickedTask;
 		},
 		closeTaskForm: (state) => {
 			state.taskFormOpened = false;
+			state.taskFormMode = "readonly";
+			state.clickedTask = undefined;
 		},
 		deleteTask: (state, action: PayloadAction<DeleteTaskPayload>) => {
 			const index = state.tasks.findIndex(
@@ -105,3 +117,7 @@ export const finishedTasksSelector = (state: AppState) =>
 	state.tasksState.tasks.filter((task) => task.dateFinished !== undefined);
 export const taskFormOpenedSelector = (state: AppState) =>
 	state.tasksState.taskFormOpened;
+export const clickedTaskSelector = (state: AppState) =>
+	state.tasksState.clickedTask;
+export const taskFormModeSelector = (state: AppState) =>
+	state.tasksState.taskFormMode;

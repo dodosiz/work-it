@@ -12,7 +12,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 
 const preloadedState: AppState = {
 	notifications: { message: undefined },
-	tasksState: { tasks: [], taskFormOpened: false },
+	tasksState: { tasks: [], taskFormOpened: false, taskFormMode: "readonly" },
 	usersState: {
 		users: [
 			{

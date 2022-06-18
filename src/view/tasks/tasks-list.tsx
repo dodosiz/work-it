@@ -10,6 +10,7 @@ import { addNotification } from "../../data/notifications/notifications";
 import {
 	deleteTask,
 	finishTask,
+	openTaskForm,
 	Task,
 	tasksSelector,
 } from "../../data/tasks/tasks";
@@ -64,6 +65,14 @@ function TaskCard(props: TaskCardProps) {
 			})
 		);
 	};
+	const handleTitleClick = () => {
+		dispatch(
+			openTaskForm({
+				taskFormMode: "readonly",
+				clickedTask: props.task,
+			})
+		);
+	};
 	return (
 		<Card className="task" style={checked ? { opacity: "0%" } : {}}>
 			<Card.Body>
@@ -75,7 +84,15 @@ function TaskCard(props: TaskCardProps) {
 							handleCheck={props.mode === "todo" ? handleCheck : undefined}
 						/>
 					</Col>
-					<Col md={props.mode === "todo" ? 5 : 4}>{props.task.title}</Col>
+					<Col md={props.mode === "todo" ? 5 : 4}>
+						<span
+							className="pointer"
+							data-testid={`title-${props.task.id}`}
+							onClick={handleTitleClick}
+						>
+							{props.task.title}
+						</span>
+					</Col>
 					<Col md={props.mode === "todo" ? 4 : 3}>
 						{props.task.assignee?.firstName +
 							" " +
@@ -113,7 +130,7 @@ function CheckBox(props: CheckBoxProps) {
 		>
 			{!props.checked && (
 				<BsCheckCircle
-					className="check"
+					className="pointer"
 					onClick={props.handleCheck}
 					size={"1.5em"}
 					data-testid={`check-box-${props.taskId}`}

@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Task form component: task opened in read only mode 1`] = `
+<div>
+  <form
+    class=""
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="title"
+      >
+        Title:
+      </label>
+      <input
+        class="form-control"
+        id="title"
+        readonly=""
+        type="text"
+        value="Plan the requirements for the next release."
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="description"
+      >
+        Description:
+      </label>
+      <input
+        class="form-control"
+        id="description"
+        readonly=""
+        type="textarea"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <select
+        aria-label="Assignee"
+        class="form-select"
+        data-testid="assignee"
+        disabled=""
+        id="assignee"
+      >
+        <option />
+        <option
+          value="user1"
+        >
+          Alejandro Matthews
+        </option>
+        <option
+          value="user2"
+        >
+          Mai Yoder
+        </option>
+        <option
+          value="user3"
+        >
+          Wade Delgado
+        </option>
+      </select>
+    </div>
+  </form>
+</div>
+`;

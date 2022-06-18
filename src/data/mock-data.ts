@@ -56,6 +56,7 @@ export const DATA: AppState = {
 			},
 		],
 		taskFormOpened: false,
+		taskFormMode: "readonly",
 	},
 	usersState: {
 		userFormOpened: false,

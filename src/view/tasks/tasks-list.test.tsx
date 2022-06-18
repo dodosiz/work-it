@@ -8,11 +8,13 @@ import { notificationsReducer } from "../../data/notifications/notifications";
 import { Provider } from "react-redux";
 import userEvent from "@testing-library/user-event";
 import { filterReducer } from "../../data/filter/filter";
+import { AppState } from "../../data/store";
 
-const preloadedState = {
-	notifications: undefined,
+const preloadedState: AppState = {
+	notifications: { message: undefined },
 	tasksState: {
 		taskFormOpened: false,
+		taskFormMode: "readonly",
 		tasks: [
 			{
 				id: "task1",
@@ -190,5 +192,26 @@ describe("Tasks list:", () => {
 		// after the delete
 		expect(screen.queryAllByTestId("check-task1").length).toBe(1);
 		expect(screen.queryAllByTestId("check-task2").length).toBe(0);
+	});
+	test("click on title opens the view modal", () => {
+		render(
+			<Provider store={store}>
+				<TasksList mode={"todo"} />
+			</Provider>
+		);
+		userEvent.click(screen.getByTestId("title-task1"));
+		expect(store.getState().tasksState.taskFormOpened).toBeTruthy();
+		expect(store.getState().tasksState.clickedTask).toEqual({
+			id: "task1",
+			assignee: {
+				id: "user2",
+				firstName: "John",
+				lastName: "Doe",
+				role: "Developer",
+			},
+			title: "Plan the requirements for the next release.",
+			dateFinished: undefined,
+			description: "",
+		});
 	});
 });

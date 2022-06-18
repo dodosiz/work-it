@@ -17,7 +17,7 @@ jest.mock("uuid", () => ({
 
 const preloadedState: AppState = {
 	notifications: { message: undefined },
-	tasksState: { tasks: [], taskFormOpened: false },
+	tasksState: { tasks: [], taskFormOpened: false, taskFormMode: "edit" },
 	usersState: {
 		users: [
 			{
@@ -87,5 +87,40 @@ describe("Task form component:", () => {
 		expect(store.getState().notifications.message).toBe(
 			"Created task: Create web app."
 		);
+	});
+	test("task opened in read only mode", () => {
+		const store = configureStore({
+			reducer: {
+				usersState: usersReducer,
+				tasksState: tasksReducer,
+				notifications: notificationsReducer,
+				filterState: filterReducer,
+			},
+			preloadedState: {
+				...preloadedState,
+				tasksState: {
+					...preloadedState.tasksState,
+					taskFormMode: "readonly",
+					clickedTask: {
+						id: "task1",
+						assignee: {
+							id: "user2",
+							firstName: "John",
+							lastName: "Doe",
+							role: "Developer",
+						},
+						title: "Plan the requirements for the next release.",
+						dateFinished: undefined,
+						description: "",
+					},
+				},
+			},
+		});
+		const editor = render(
+			<Provider store={store}>
+				<TaskForm />
+			</Provider>
+		);
+		expect(editor.container).toMatchSnapshot();
 	});
 });

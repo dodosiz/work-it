@@ -2,15 +2,28 @@ import * as React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { addNotification } from "../../data/notifications/notifications";
-import { closeTaskForm, createTask } from "../../data/tasks/tasks";
+import {
+	clickedTaskSelector,
+	closeTaskForm,
+	createTask,
+	taskFormModeSelector,
+} from "../../data/tasks/tasks";
 import { usersSelector } from "../../data/users/users";
 
 export function TaskForm() {
 	const dispatch = useDispatch();
 	const users = useSelector(usersSelector);
-	const [title, setTitle] = React.useState("");
-	const [description, setDescription] = React.useState("");
-	const [userId, setUserId] = React.useState<string | undefined>(undefined);
+	const clickedTask = useSelector(clickedTaskSelector);
+	const readOnly = useSelector(taskFormModeSelector) === "readonly";
+	const [title, setTitle] = React.useState(
+		clickedTask ? clickedTask.title : ""
+	);
+	const [description, setDescription] = React.useState(
+		clickedTask ? clickedTask?.description : ""
+	);
+	const [userId, setUserId] = React.useState<string | undefined>(
+		clickedTask ? clickedTask.assignee?.id : undefined
+	);
 	const [dirty, setDirty] = React.useState(false);
 	const handleTitleChange: React.ChangeEventHandler<HTMLInputElement> = (
 		event
@@ -32,14 +45,16 @@ export function TaskForm() {
 	};
 	const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault();
-		const assignee = users.find((user) => user.id === userId);
-		dispatch(createTask({ title, description, assignee }));
-		dispatch(
-			addNotification({
-				message: `Created task: ${title}`,
-			})
-		);
-		dispatch(closeTaskForm());
+		if (!readOnly) {
+			const assignee = users.find((user) => user.id === userId);
+			dispatch(createTask({ title, description, assignee }));
+			dispatch(
+				addNotification({
+					message: `Created task: ${title}`,
+				})
+			);
+			dispatch(closeTaskForm());
+		}
 	};
 	const handleCancel = () => {
 		dispatch(closeTaskForm());
@@ -54,12 +69,18 @@ export function TaskForm() {
 		<Form onSubmit={handleSubmit}>
 			<Form.Group className="mb-3" controlId="title">
 				<Form.Label>Title:</Form.Label>
-				<Form.Control type="text" value={title} onChange={handleTitleChange} />
+				<Form.Control
+					readOnly={readOnly}
+					type="text"
+					value={title}
+					onChange={handleTitleChange}
+				/>
 			</Form.Group>
 			<Form.Group className="mb-3" controlId="description">
 				<Form.Label>Description:</Form.Label>
 				<Form.Control
 					type="textarea"
+					readOnly={readOnly}
 					value={description}
 					onChange={handleDescriptionChange}
 				/>
@@ -68,6 +89,7 @@ export function TaskForm() {
 				<Form.Select
 					aria-label="Assignee"
 					onChange={handleAssigneeChange}
+					disabled={readOnly}
 					value={userId}
 					data-testid="assignee"
 				>
@@ -79,12 +101,21 @@ export function TaskForm() {
 					))}
 				</Form.Select>
 			</Form.Group>
-			<Button disabled={submitDisabled()} variant="primary" type="submit">
-				Save
-			</Button>{" "}
-			<Button variant="secondary" onClick={() => handleCancel()}>
-				Cancel
-			</Button>
+			{!readOnly && (
+				<>
+					<Button
+						className="me-2"
+						disabled={submitDisabled()}
+						variant="primary"
+						type="submit"
+					>
+						Save
+					</Button>
+					<Button variant="secondary" onClick={() => handleCancel()}>
+						Cancel
+					</Button>
+				</>
+			)}
 		</Form>
 	);
 }
