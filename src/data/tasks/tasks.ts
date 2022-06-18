@@ -24,6 +24,10 @@ interface CreateTaskPayload {
 	assignee: User | undefined;
 }
 
+interface EditTaskPayload extends CreateTaskPayload {
+	id: string;
+}
+
 interface FinishTaskPayload {
 	taskId: string;
 }
@@ -52,6 +56,15 @@ const tasksSlice = createSlice({
 				id: v4(),
 				dateFinished: undefined,
 				...action.payload,
+			});
+		},
+		editTask: (state, action: PayloadAction<EditTaskPayload>) => {
+			const index = state.tasks.findIndex(
+				(task) => task.id === action.payload.id
+			);
+			state.tasks.splice(index, 1, {
+				...action.payload,
+				dateFinished: undefined,
 			});
 		},
 		finishTask: (state, action: PayloadAction<FinishTaskPayload>) => {
@@ -83,6 +96,7 @@ const tasksSlice = createSlice({
 
 export const {
 	createTask,
+	editTask,
 	openTaskForm,
 	closeTaskForm,
 	finishTask,

@@ -4,6 +4,7 @@ import {
 	BsCheckCircle,
 	BsCheckCircleFill,
 	BsFillTrashFill,
+	BsPencilFill,
 } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { addNotification } from "../../data/notifications/notifications";
@@ -57,6 +58,14 @@ function TaskCard(props: TaskCardProps) {
 			dispatch(finishTask({ taskId: props.task.id }));
 		}, fadeOutTimeout);
 	};
+	const handleEdit = () => {
+		dispatch(
+			openTaskForm({
+				taskFormMode: "edit",
+				clickedTask: props.task,
+			})
+		);
+	};
 	const handleDelete = () => {
 		dispatch(deleteTask({ taskId: props.task.id }));
 		dispatch(
@@ -84,7 +93,7 @@ function TaskCard(props: TaskCardProps) {
 							handleCheck={props.mode === "todo" ? handleCheck : undefined}
 						/>
 					</Col>
-					<Col md={props.mode === "todo" ? 5 : 4}>
+					<Col md={5}>
 						<span
 							className="pointer"
 							data-testid={`title-${props.task.id}`}
@@ -93,7 +102,7 @@ function TaskCard(props: TaskCardProps) {
 							{props.task.title}
 						</span>
 					</Col>
-					<Col md={props.mode === "todo" ? 4 : 3}>
+					<Col md={4}>
 						{props.task.assignee?.firstName +
 							" " +
 							props.task.assignee?.lastName}
@@ -101,15 +110,25 @@ function TaskCard(props: TaskCardProps) {
 					{props.mode === "done" && (
 						<Col md={2}>{`Finished on: ${props.task.dateFinished}`}</Col>
 					)}
-					<Col md={2}>
-						<Button
-							data-testid={`delete-button-${props.task.id}`}
-							variant="outline-danger"
-							onClick={handleDelete}
-						>
-							<BsFillTrashFill />
-						</Button>
-					</Col>
+					{props.mode === "todo" && (
+						<Col md={2}>
+							<Button
+								data-testid={`edit-button-${props.task.id}`}
+								variant="outline-primary"
+								className="me-2"
+								onClick={handleEdit}
+							>
+								<BsPencilFill />
+							</Button>
+							<Button
+								data-testid={`delete-button-${props.task.id}`}
+								variant="outline-danger"
+								onClick={handleDelete}
+							>
+								<BsFillTrashFill />
+							</Button>
+						</Col>
+					)}
 				</Row>
 			</Card.Body>
 		</Card>

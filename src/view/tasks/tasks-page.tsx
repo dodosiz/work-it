@@ -2,6 +2,7 @@ import * as React from "react";
 import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
+	clickedTaskSelector,
 	closeTaskForm,
 	openTaskForm,
 	taskFormModeSelector,
@@ -16,6 +17,7 @@ export function TasksPage(props: { mode: "todo" | "done" }) {
 	const dispatch = useDispatch();
 	const taskFormOpened = useSelector(taskFormOpenedSelector);
 	const taskFormMode = useSelector(taskFormModeSelector);
+	const clickedTask = useSelector(clickedTaskSelector);
 	const handleCloseTaskForm = () => {
 		dispatch(closeTaskForm());
 	};
@@ -27,7 +29,7 @@ export function TasksPage(props: { mode: "todo" | "done" }) {
 			<ModalDialog
 				handleClose={handleCloseTaskForm}
 				show={taskFormOpened}
-				title={taskFormMode === "readonly" ? "View task" : "Create new task"}
+				title={deriveFormTitle(taskFormMode, !!clickedTask)}
 			>
 				<TaskForm />
 			</ModalDialog>
@@ -48,4 +50,17 @@ export function TasksPage(props: { mode: "todo" | "done" }) {
 			</Container>
 		</>
 	);
+}
+
+function deriveFormTitle(
+	taskFormMode: "readonly" | "edit",
+	clickedTask?: boolean
+) {
+	if (taskFormMode === "readonly") {
+		return "View task";
+	} else if (clickedTask) {
+		return "Edit task";
+	} else {
+		return "Create new task";
+	}
 }

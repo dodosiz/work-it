@@ -70,10 +70,11 @@ function User(props: UserProps) {
 				<Button
 					data-testid={`edit-button-${props.index}`}
 					variant="outline-primary"
+					className="me-2"
 					onClick={() => props.handleEdit(props.user.id)}
 				>
 					<BsPencilFill />
-				</Button>{" "}
+				</Button>
 				<Button
 					data-testid={`delete-button-${props.index}`}
 					variant="outline-danger"

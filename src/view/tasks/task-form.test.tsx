@@ -61,7 +61,7 @@ describe("Task form component:", () => {
 				<TaskForm />
 			</Provider>
 		);
-		userEvent.type(screen.getByLabelText("Title:"), "Create web app.");
+		userEvent.type(screen.getByLabelText("Title:"), "Create web app");
 		userEvent.type(
 			screen.getByLabelText("Description:"),
 			"Create a web app with React."
@@ -81,11 +81,67 @@ describe("Task form component:", () => {
 				},
 				dateFinished: undefined,
 				description: "Create a web app with React.",
-				title: "Create web app.",
+				title: "Create web app",
 			},
 		]);
 		expect(store.getState().notifications.message).toBe(
-			"Created task: Create web app."
+			'Created task: "Create web app"'
+		);
+	});
+	test("edit a task", () => {
+		const store = configureStore({
+			reducer: {
+				usersState: usersReducer,
+				tasksState: tasksReducer,
+				notifications: notificationsReducer,
+				filterState: filterReducer,
+			},
+			preloadedState: {
+				...preloadedState,
+				tasksState: {
+					...preloadedState.tasksState,
+					clickedTask: {
+						id: "task1",
+						assignee: {
+							firstName: "Mai",
+							id: "user2",
+							lastName: "Yoder",
+							role: "UI/UX designer",
+						},
+						dateFinished: undefined,
+						description: "",
+						title: "Create web app",
+					},
+				},
+			},
+		});
+		render(
+			<Provider store={store}>
+				<TaskForm />
+			</Provider>
+		);
+		userEvent.type(screen.getByLabelText("Title:"), " in React");
+		userEvent.type(
+			screen.getByLabelText("Description:"),
+			"Create a web app with React."
+		);
+		userEvent.click(screen.getByRole("button", { name: "Save" }));
+		expect(store.getState().tasksState.tasks).toEqual([
+			{
+				id: "task1",
+				assignee: {
+					firstName: "Mai",
+					id: "user2",
+					lastName: "Yoder",
+					role: "UI/UX designer",
+				},
+				dateFinished: undefined,
+				description: "Create a web app with React.",
+				title: "Create web app in React",
+			},
+		]);
+		expect(store.getState().notifications.message).toBe(
+			'Updated task: "Create web app in React"'
 		);
 	});
 	test("task opened in read only mode", () => {

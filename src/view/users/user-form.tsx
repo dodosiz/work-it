@@ -88,9 +88,14 @@ export function UserForm() {
 				<Form.Label>Role:</Form.Label>
 				<Form.Control type="text" value={role} onChange={handleRoleChange} />
 			</Form.Group>
-			<Button disabled={submitDisabled()} variant="primary" type="submit">
+			<Button
+				disabled={submitDisabled()}
+				className="me-2"
+				variant="primary"
+				type="submit"
+			>
 				Save
-			</Button>{" "}
+			</Button>
 			<Button variant="secondary" onClick={() => handleCancel()}>
 				Cancel
 			</Button>

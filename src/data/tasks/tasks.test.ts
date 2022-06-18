@@ -4,6 +4,7 @@ import {
 	closeTaskForm,
 	createTask,
 	deleteTask,
+	editTask,
 	finishTask,
 	openTaskForm,
 	tasksReducer,
@@ -121,5 +122,37 @@ describe("Tasks reducer:", () => {
 			deleteTask({ taskId: "taskId" })
 		);
 		expect(nextState.tasks).toEqual([]);
+	});
+	test("edit a task", () => {
+		const nextState = tasksReducer(
+			{
+				taskFormOpened: false,
+				tasks: [
+					{
+						id: "taskId",
+						title: "Title",
+						description: "Task description",
+						assignee: mockUser,
+						dateFinished: undefined,
+					},
+				],
+				taskFormMode: "readonly",
+			},
+			editTask({
+				id: "taskId",
+				assignee: mockUser,
+				title: "another title",
+				description: "",
+			})
+		);
+		expect(nextState.tasks).toEqual([
+			{
+				id: "taskId",
+				title: "another title",
+				description: "",
+				assignee: mockUser,
+				dateFinished: undefined,
+			},
+		]);
 	});
 });

@@ -6,6 +6,7 @@ import {
 	clickedTaskSelector,
 	closeTaskForm,
 	createTask,
+	editTask,
 	taskFormModeSelector,
 } from "../../data/tasks/tasks";
 import { usersSelector } from "../../data/users/users";
@@ -47,12 +48,23 @@ export function TaskForm() {
 		event.preventDefault();
 		if (!readOnly) {
 			const assignee = users.find((user) => user.id === userId);
-			dispatch(createTask({ title, description, assignee }));
-			dispatch(
-				addNotification({
-					message: `Created task: ${title}`,
-				})
-			);
+			if (!clickedTask) {
+				dispatch(createTask({ title, description, assignee }));
+				dispatch(
+					addNotification({
+						message: `Created task: "${title}"`,
+					})
+				);
+			} else {
+				dispatch(
+					editTask({ id: clickedTask.id, title, description, assignee })
+				);
+				dispatch(
+					addNotification({
+						message: `Updated task: "${title}"`,
+					})
+				);
+			}
 			dispatch(closeTaskForm());
 		}
 	};
