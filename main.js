@@ -61491,7 +61491,7 @@ var __assign = (this && this.__assign) || function () {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.taskFormOpenedSelector = exports.finishedTasksSelector = exports.tasksSelector = exports.tasksReducer = exports.finishTask = exports.closeTaskForm = exports.openTaskForm = exports.createTask = void 0;
+exports.taskFormOpenedSelector = exports.finishedTasksSelector = exports.tasksSelector = exports.tasksReducer = exports.deleteTask = exports.finishTask = exports.closeTaskForm = exports.openTaskForm = exports.createTask = void 0;
 var toolkit_1 = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
 var uuid_1 = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/index.js");
 var initialState = {
@@ -61517,9 +61517,13 @@ var tasksSlice = (0, toolkit_1.createSlice)({
         closeTaskForm: function (state) {
             state.taskFormOpened = false;
         },
+        deleteTask: function (state, action) {
+            var index = state.tasks.findIndex(function (task) { return task.id === action.payload.taskId; });
+            state.tasks.splice(index, 1);
+        },
     },
 });
-exports.createTask = (_a = tasksSlice.actions, _a.createTask), exports.openTaskForm = _a.openTaskForm, exports.closeTaskForm = _a.closeTaskForm, exports.finishTask = _a.finishTask;
+exports.createTask = (_a = tasksSlice.actions, _a.createTask), exports.openTaskForm = _a.openTaskForm, exports.closeTaskForm = _a.closeTaskForm, exports.finishTask = _a.finishTask, exports.deleteTask = _a.deleteTask;
 exports.tasksReducer = tasksSlice.reducer;
 var tasksSelector = function (mode) {
     return function (state) {
@@ -62034,6 +62038,7 @@ var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/
 var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var notifications_1 = __webpack_require__(/*! ../../data/notifications/notifications */ "./src/data/notifications/notifications.ts");
 var tasks_1 = __webpack_require__(/*! ../../data/tasks/tasks */ "./src/data/tasks/tasks.ts");
 __webpack_require__(/*! ./tasks-list.css */ "./src/view/tasks/tasks-list.css");
 function TasksList(props) {
@@ -62063,16 +62068,25 @@ function TaskCard(props) {
             dispatch((0, tasks_1.finishTask)({ taskId: props.task.id }));
         }, fadeOutTimeout);
     };
+    var handleDelete = function () {
+        dispatch((0, tasks_1.deleteTask)({ taskId: props.task.id }));
+        dispatch((0, notifications_1.addNotification)({
+            message: "Deleted task \"".concat(props.task.title, "\"."),
+        }));
+    };
     return (React.createElement(react_bootstrap_1.Card, { className: "task", style: checked ? { opacity: "0%" } : {} },
         React.createElement(react_bootstrap_1.Card.Body, null,
             React.createElement(react_bootstrap_1.Row, null,
-                React.createElement(react_bootstrap_1.Col, { md: 2 },
+                React.createElement(react_bootstrap_1.Col, { md: 1 },
                     React.createElement(CheckBox, { taskId: props.task.id, checked: props.mode === "todo" ? checked : true, handleCheck: props.mode === "todo" ? handleCheck : undefined })),
                 React.createElement(react_bootstrap_1.Col, { md: props.mode === "todo" ? 5 : 4 }, props.task.title),
-                React.createElement(react_bootstrap_1.Col, { md: props.mode === "todo" ? 5 : 4 }, ((_a = props.task.assignee) === null || _a === void 0 ? void 0 : _a.firstName) +
+                React.createElement(react_bootstrap_1.Col, { md: props.mode === "todo" ? 4 : 3 }, ((_a = props.task.assignee) === null || _a === void 0 ? void 0 : _a.firstName) +
                     " " +
                     ((_b = props.task.assignee) === null || _b === void 0 ? void 0 : _b.lastName)),
-                props.mode === "done" && (React.createElement(react_bootstrap_1.Col, { md: 2 }, "Finished on: ".concat(props.task.dateFinished)))))));
+                props.mode === "done" && (React.createElement(react_bootstrap_1.Col, { md: 2 }, "Finished on: ".concat(props.task.dateFinished))),
+                React.createElement(react_bootstrap_1.Col, { md: 2 },
+                    React.createElement(react_bootstrap_1.Button, { "data-testid": "delete-button-".concat(props.task.id), variant: "outline-danger", onClick: handleDelete },
+                        React.createElement(bs_1.BsFillTrashFill, null)))))));
 }
 function CheckBox(props) {
     return (React.createElement("div", { className: "".concat(props.checked ? "done" : "undone"), "data-testid": "check-".concat(props.taskId) },
