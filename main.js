@@ -61492,7 +61492,7 @@ var __assign = (this && this.__assign) || function () {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.taskFormModeSelector = exports.clickedTaskSelector = exports.taskFormOpenedSelector = exports.finishedTasksSelector = exports.tasksSelector = exports.tasksReducer = exports.deleteTask = exports.finishTask = exports.closeTaskForm = exports.openTaskForm = exports.createTask = void 0;
+exports.taskFormModeSelector = exports.clickedTaskSelector = exports.taskFormOpenedSelector = exports.finishedTasksSelector = exports.tasksSelector = exports.tasksReducer = exports.deleteTask = exports.finishTask = exports.closeTaskForm = exports.openTaskForm = exports.editTask = exports.createTask = void 0;
 var toolkit_1 = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
 var uuid_1 = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/index.js");
 var initialState = {
@@ -61506,6 +61506,10 @@ var tasksSlice = (0, toolkit_1.createSlice)({
     reducers: {
         createTask: function (state, action) {
             state.tasks.push(__assign({ id: (0, uuid_1.v4)(), dateFinished: undefined }, action.payload));
+        },
+        editTask: function (state, action) {
+            var index = state.tasks.findIndex(function (task) { return task.id === action.payload.id; });
+            state.tasks.splice(index, 1, __assign(__assign({}, action.payload), { dateFinished: undefined }));
         },
         finishTask: function (state, action) {
             var task = state.tasks.find(function (task) { return task.id === action.payload.taskId; });
@@ -61529,7 +61533,7 @@ var tasksSlice = (0, toolkit_1.createSlice)({
         },
     },
 });
-exports.createTask = (_a = tasksSlice.actions, _a.createTask), exports.openTaskForm = _a.openTaskForm, exports.closeTaskForm = _a.closeTaskForm, exports.finishTask = _a.finishTask, exports.deleteTask = _a.deleteTask;
+exports.createTask = (_a = tasksSlice.actions, _a.createTask), exports.editTask = _a.editTask, exports.openTaskForm = _a.openTaskForm, exports.closeTaskForm = _a.closeTaskForm, exports.finishTask = _a.finishTask, exports.deleteTask = _a.deleteTask;
 exports.tasksReducer = tasksSlice.reducer;
 var tasksSelector = function (mode) {
     return function (state) {
@@ -61984,10 +61988,18 @@ function TaskForm() {
         event.preventDefault();
         if (!readOnly) {
             var assignee = users.find(function (user) { return user.id === userId; });
-            dispatch((0, tasks_1.createTask)({ title: title, description: description, assignee: assignee }));
-            dispatch((0, notifications_1.addNotification)({
-                message: "Created task: ".concat(title),
-            }));
+            if (!clickedTask) {
+                dispatch((0, tasks_1.createTask)({ title: title, description: description, assignee: assignee }));
+                dispatch((0, notifications_1.addNotification)({
+                    message: "Created task: \"".concat(title, "\""),
+                }));
+            }
+            else {
+                dispatch((0, tasks_1.editTask)({ id: clickedTask.id, title: title, description: description, assignee: assignee }));
+                dispatch((0, notifications_1.addNotification)({
+                    message: "Updated task: \"".concat(title, "\""),
+                }));
+            }
             dispatch((0, tasks_1.closeTaskForm)());
         }
     };
@@ -62087,6 +62099,12 @@ function TaskCard(props) {
             dispatch((0, tasks_1.finishTask)({ taskId: props.task.id }));
         }, fadeOutTimeout);
     };
+    var handleEdit = function () {
+        dispatch((0, tasks_1.openTaskForm)({
+            taskFormMode: "edit",
+            clickedTask: props.task,
+        }));
+    };
     var handleDelete = function () {
         dispatch((0, tasks_1.deleteTask)({ taskId: props.task.id }));
         dispatch((0, notifications_1.addNotification)({
@@ -62104,15 +62122,17 @@ function TaskCard(props) {
             React.createElement(react_bootstrap_1.Row, null,
                 React.createElement(react_bootstrap_1.Col, { md: 1 },
                     React.createElement(CheckBox, { taskId: props.task.id, checked: props.mode === "todo" ? checked : true, handleCheck: props.mode === "todo" ? handleCheck : undefined })),
-                React.createElement(react_bootstrap_1.Col, { md: props.mode === "todo" ? 5 : 4 },
+                React.createElement(react_bootstrap_1.Col, { md: 5 },
                     React.createElement("span", { className: "pointer", "data-testid": "title-".concat(props.task.id), onClick: handleTitleClick }, props.task.title)),
-                React.createElement(react_bootstrap_1.Col, { md: props.mode === "todo" ? 4 : 3 }, ((_a = props.task.assignee) === null || _a === void 0 ? void 0 : _a.firstName) +
+                React.createElement(react_bootstrap_1.Col, { md: 4 }, ((_a = props.task.assignee) === null || _a === void 0 ? void 0 : _a.firstName) +
                     " " +
                     ((_b = props.task.assignee) === null || _b === void 0 ? void 0 : _b.lastName)),
                 props.mode === "done" && (React.createElement(react_bootstrap_1.Col, { md: 2 }, "Finished on: ".concat(props.task.dateFinished))),
-                React.createElement(react_bootstrap_1.Col, { md: 2 },
+                props.mode === "todo" && (React.createElement(react_bootstrap_1.Col, { md: 2 },
+                    React.createElement(react_bootstrap_1.Button, { "data-testid": "edit-button-".concat(props.task.id), variant: "outline-primary", className: "me-2", onClick: handleEdit },
+                        React.createElement(bs_1.BsPencilFill, null)),
                     React.createElement(react_bootstrap_1.Button, { "data-testid": "delete-button-".concat(props.task.id), variant: "outline-danger", onClick: handleDelete },
-                        React.createElement(bs_1.BsFillTrashFill, null)))))));
+                        React.createElement(bs_1.BsFillTrashFill, null))))))));
 }
 function CheckBox(props) {
     return (React.createElement("div", { className: "".concat(props.checked ? "done" : "undone"), "data-testid": "check-".concat(props.taskId) },
@@ -62168,6 +62188,7 @@ function TasksPage(props) {
     var dispatch = (0, react_redux_1.useDispatch)();
     var taskFormOpened = (0, react_redux_1.useSelector)(tasks_1.taskFormOpenedSelector);
     var taskFormMode = (0, react_redux_1.useSelector)(tasks_1.taskFormModeSelector);
+    var clickedTask = (0, react_redux_1.useSelector)(tasks_1.clickedTaskSelector);
     var handleCloseTaskForm = function () {
         dispatch((0, tasks_1.closeTaskForm)());
     };
@@ -62175,7 +62196,7 @@ function TasksPage(props) {
         dispatch((0, tasks_1.openTaskForm)({ taskFormMode: "edit" }));
     };
     return (React.createElement(React.Fragment, null,
-        React.createElement(modal_dialog_1.ModalDialog, { handleClose: handleCloseTaskForm, show: taskFormOpened, title: taskFormMode === "readonly" ? "View task" : "Create new task" },
+        React.createElement(modal_dialog_1.ModalDialog, { handleClose: handleCloseTaskForm, show: taskFormOpened, title: deriveFormTitle(taskFormMode, !!clickedTask) },
             React.createElement(task_form_1.TaskForm, null)),
         React.createElement(react_bootstrap_1.Navbar, { expand: "lg", variant: "light", bg: "light" },
             React.createElement(react_bootstrap_1.Container, null,
@@ -62185,6 +62206,17 @@ function TasksPage(props) {
             React.createElement(tasks_list_1.TasksList, { mode: props.mode }))));
 }
 exports.TasksPage = TasksPage;
+function deriveFormTitle(taskFormMode, clickedTask) {
+    if (taskFormMode === "readonly") {
+        return "View task";
+    }
+    else if (clickedTask) {
+        return "Edit task";
+    }
+    else {
+        return "Create new task";
+    }
+}
 
 
 /***/ }),
@@ -62281,8 +62313,7 @@ function UserForm() {
         React.createElement(react_bootstrap_1.Form.Group, { className: "mb-3", controlId: "role" },
             React.createElement(react_bootstrap_1.Form.Label, null, "Role:"),
             React.createElement(react_bootstrap_1.Form.Control, { type: "text", value: role, onChange: handleRoleChange })),
-        React.createElement(react_bootstrap_1.Button, { disabled: submitDisabled(), variant: "primary", type: "submit" }, "Save"),
-        " ",
+        React.createElement(react_bootstrap_1.Button, { disabled: submitDisabled(), className: "me-2", variant: "primary", type: "submit" }, "Save"),
         React.createElement(react_bootstrap_1.Button, { variant: "secondary", onClick: function () { return handleCancel(); } }, "Cancel")));
 }
 exports.UserForm = UserForm;
@@ -62360,9 +62391,8 @@ function User(props) {
         React.createElement("td", null, props.user.lastName),
         React.createElement("td", null, props.user.role),
         React.createElement("td", null,
-            React.createElement(react_bootstrap_1.Button, { "data-testid": "edit-button-".concat(props.index), variant: "outline-primary", onClick: function () { return props.handleEdit(props.user.id); } },
+            React.createElement(react_bootstrap_1.Button, { "data-testid": "edit-button-".concat(props.index), variant: "outline-primary", className: "me-2", onClick: function () { return props.handleEdit(props.user.id); } },
                 React.createElement(bs_1.BsPencilFill, null)),
-            " ",
             React.createElement(react_bootstrap_1.Button, { "data-testid": "delete-button-".concat(props.index), variant: "outline-danger", onClick: function () { return props.handleDelete(props.user); } },
                 React.createElement(bs_1.BsFillTrashFill, null)))));
 }
